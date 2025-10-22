@@ -7,11 +7,14 @@
     "type": "module",
     "main": "app.js",
     "scripts": {
-        "start": "node back-end/app.js"
+        "start": "node back-end/app.js",
+        "dev": "SET NODE_ENV=DEVELOPMENT& nodemon back-end/app.js",
+        "prod": "SET NODE_ENV=PRODUCTION& nodemon back-end/app.js"
     },
     "dependencies": {
         "dotenv": "^17.2.3",
         "express": "^5.1.0",
-        "mongoose": "^8.19.2"
+        "mongoose": "^8.19.2",
+        "nodemon": "^3.1.10"
     }
 }

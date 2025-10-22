@@ -4,5 +4,7 @@ dotenv.config({ path: "back-end/config/config.env" });
 
 const app = express();
 app.listen(process.env.PORT, () => {
-    console.log(`Le serveur est lancé sur le port: ${process.env.PORT}`);
+    console.log(
+        `Le serveur est lancé sur le port: ${process.env.PORT} en mode :${process.env.NODE_ENV}`
+    );
 });
