@@ -1,0 +1,17 @@
+{
+    "name": "projet-mern-ecom-shop",
+    "version": "1.0.0",
+    "description": "mern-eCommerce",
+    "license": "ISC",
+    "author": "amel",
+    "type": "module",
+    "main": "app.js",
+    "scripts": {
+        "start": "node back-end/app.js"
+    },
+    "dependencies": {
+        "dotenv": "^17.2.3",
+        "express": "^5.1.0",
+        "mongoose": "^8.19.2"
+    }
+}
