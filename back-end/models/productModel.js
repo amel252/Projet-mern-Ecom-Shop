@@ -8,11 +8,9 @@ const productSchema = new mongoose.Schema(
             maxLength: [200, "product name can not exceed 200 characters"],
         },
         price: {
-            type: {
-                type: Number,
-                required: [true, "please enter product price "],
-                max: [99999, "product price can not exceed 5 digits"],
-            },
+            type: Number,
+            required: [true, "please enter product price "],
+            max: [99999, "product price can not exceed 5 digits"],
         },
         description: {
             type: String,
@@ -85,7 +83,7 @@ const productSchema = new mongoose.Schema(
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true,
+            required: false,
         },
     },
     {
