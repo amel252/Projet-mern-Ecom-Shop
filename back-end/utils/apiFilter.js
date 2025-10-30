@@ -16,5 +16,21 @@ class APIFilters {
         this.query = this.query.find({ ...keyword });
         return this;
     }
+    // recherche par rapport au prix , rating
+    filters() {
+        const queryCopy = { ...this.queryStr };
+        const fieldsToRemove = ["keyword"];
+        fieldsToRemove.forEach((el) => delete queryCopy[el]);
+        let queryStr = JSON.stringify(queryCopy);
+        // filtre par rapport au prix
+        queryStr = queryStr.replace(
+            /\b(gt|gte|lt|lte)\b/g,
+            (match) => `$${match}`
+        );
+        console.log(queryStr);
+        // convertir le Json en  objet
+        this.query = this.query.find(JSON.parse(queryStr));
+        return this;
+    }
 }
 export default APIFilters;
