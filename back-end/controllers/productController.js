@@ -13,10 +13,18 @@ export const newProduct = catchAsyncErrors(async (req, res) => {
 
 // getAllProducts
 export const getProducts = catchAsyncErrors(async (req, res) => {
+    const resPerPage = 4;
+
     const apiFilter = new APIFilters(Product, req.query).search().filters();
     const products = await apiFilter.query;
+
     let filteredProductsCount = products.length;
+    APIFilters.pagination(resPerPage);
+
+    products = await apiFilters.query.clone();
+
     res.status(200).json({
+        resPerPage,
         filteredProductsCount,
         products,
     });
