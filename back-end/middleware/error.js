@@ -19,6 +19,7 @@ export default (err, req, res, next) => {
         const message = `Duplicate${Object.keys(err.keyValue)} entered`;
         error = new ErrorHandler(message, 400);
     }
+    // Validation JWT:
     if (error.name === "JsonWebTokenError") {
         const message = `JSON Web Token is invalid, try Again !!`;
         error = new ErrorHandler(message, 400);
