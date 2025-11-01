@@ -15,8 +15,9 @@ export const newProduct = catchAsyncErrors(async (req, res) => {
 export const getProducts = catchAsyncErrors(async (req, res) => {
     const resPerPage = 4;
 
-    const apiFilter = new APIFilters(Product, req.query).search().filters();
-    const products = await apiFilter.query;
+    let apiFilters = new APIFilters(Product, req.query).search().filters();
+    // on met let pour qu'on puisse la réassigné
+    let products = await apiFilters.query;
 
     let filteredProductsCount = products.length;
     APIFilters.pagination(resPerPage);

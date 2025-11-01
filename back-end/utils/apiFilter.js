@@ -19,7 +19,7 @@ class APIFilters {
     // recherche par rapport au prix , rating
     filters() {
         const queryCopy = { ...this.queryStr };
-        const fieldsToRemove = ["keyword"];
+        const fieldsToRemove = ["keyword", "page"];
         fieldsToRemove.forEach((el) => delete queryCopy[el]);
         let queryStr = JSON.stringify(queryCopy);
         // filtre par rapport au prix
@@ -37,7 +37,7 @@ class APIFilters {
         const currentPage = Number(this.queryStr.page) || 1;
         const skip = resPerPage * (currentPage - 1);
 
-        this.query = this.query.limit(resPerPage.skip(skip));
+        this.query = this.query.limit(resPerPage).skip(skip);
         return this;
     }
 }
