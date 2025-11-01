@@ -2,18 +2,20 @@ import express from "express";
 import path from "path";
 import dotenv from "dotenv";
 dotenv.config({ path: "back-end/config/config.env" });
-import ProductRoutes from "./routes/productRoute.js";
+import productRoutes from "./routes/productRoute.js";
 import { connectedDatabase } from "./config/dbConnect.js";
 // on l'importe sans nom
 import errorMiddleware from "./middleware/error.js";
 import { log } from "console";
+import authRoutes from "./routes/authRoute.js";
 
 const app = express();
 
 connectedDatabase();
 
 app.use(express.json());
-app.use("/api/v1", ProductRoutes);
+app.use("/api/v1", productRoutes);
+app.use("/api/v1", authRoutes);
 // middleware de gestion d'erreur
 app.use(errorMiddleware);
 
