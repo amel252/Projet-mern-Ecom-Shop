@@ -1,5 +1,6 @@
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import User from "../models/userModel.js";
+import jwt from "jsonwebtoken";
 
 // inscription de User
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -9,5 +10,6 @@ export const registerUser = catchAsyncErrors(async (req, res, next) => {
         email,
         password,
     });
-    res.status(201).json({ succes: true });
+    const token = user.getJwtToken();
+    res.status(201).json({ token });
 });
