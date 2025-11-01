@@ -48,5 +48,10 @@ userSchema.methods.getJwtToken = function () {
         expiresIn: process.env.JWT_EXPIRES_TIME,
     });
 };
+//  comparaison de mpd
+userSchema.methods.comparePassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
+
 const User = mongoose.model("User", userSchema);
 export default User;
