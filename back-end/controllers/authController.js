@@ -2,16 +2,20 @@ import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import User from "../models/userModel.js";
 // import jwt from "jsonwebtoken";
 import ErrorHandler from "../utils/errorHandler.js";
+import sendToken from "../utils/sendToken.js";
+
 // inscription de User
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
     const { name, email, password } = req.body;
+    if (name === "" || email === "" || password === "") {
+        return next(new ErrorHandler("All fields are required ", 400));
+    }
     const user = await User.create({
         name,
         email,
         password,
     });
-    const token = user.getJwtToken();
-    res.status(201).json({ token });
+    sendToken(user, 201, res);
 });
 // connexion
 export const loginUser = catchAsyncErrors(async (req, res, next) => {
@@ -28,8 +32,5 @@ export const loginUser = catchAsyncErrors(async (req, res, next) => {
     if (!isPwdMatched) {
         return next(new ErrorHandler("password does'nt match"));
     }
-    const token = user.getJwtToken();
-    res.status(200).json({
-        token,
-    });
+    sendToken(user, 200, res);
 });
