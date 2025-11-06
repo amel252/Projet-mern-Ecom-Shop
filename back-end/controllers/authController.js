@@ -3,6 +3,8 @@ import User from "../models/userModel.js";
 // import jwt from "jsonwebtoken";
 import ErrorHandler from "../utils/errorHandler.js";
 import sendToken from "../utils/sendToken.js";
+import sendEmail from "../utils/sendEmail.js";
+import { getResetPasswordTemplate } from "../utils/emailTemplates.js";
 
 // inscription de User
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -16,6 +18,37 @@ export const registerUser = catchAsyncErrors(async (req, res, next) => {
         password,
     });
     sendToken(user, 201, res);
+});
+
+// forgot PWD => /api/v1/password/forgot
+export const forgotPassword = catchAsyncErrors(async (req, res, next) => {
+    //  recherche si utilisateur est déja existant en BD
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+        return next(new ErrorHandler("user not found with this email", 404));
+    }
+    // si existe => récup de token
+    const resetToken = user.getResetPasswordToken();
+    await user.save();
+    // création de reset Password Url
+    const resetUrl = `${process.env.FRONTEND_URL}/api/v1/password/reset/${resetToken}`;
+    const message = getResetPasswordTemplate(user?.name, resetUrl);
+    try {
+        await sendEmail({
+            email: user.email,
+            subject: "Shop password Recovery",
+            message,
+        });
+        res.status(200).json({
+            message: `Email sent to:${user.email}`,
+        });
+        return;
+    } catch (error) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpired = undefined;
+        await user.save();
+        return next(new ErrorHandler(error?.message, 500));
+    }
 });
 // connexion
 export const loginUser = catchAsyncErrors(async (req, res, next) => {
@@ -43,3 +76,5 @@ export const logoutUser = catchAsyncErrors(async (req, res, next) => {
         message: "Logged Out",
     });
 });
+
+//  reset password
