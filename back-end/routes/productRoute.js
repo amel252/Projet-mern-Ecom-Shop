@@ -11,12 +11,16 @@ import { isAuthentificatedUser, authorizeRole } from "../middleware/auth.js";
 // j'ai instiancé expresss
 const router = express.Router();
 
-router.route("/admin/products").post(newProduct);
+router.route("/products").get(getProducts);
 router
-    .route("/products")
-    .get(isAuthentificatedUser, authorizeRole("admin"), getProducts);
+    .route("/admin/products")
+    .post(isAuthentificatedUser, authorizeRole("admin"), newProduct);
 router.route("/products/:id").get(getProductDetails);
-router.route("/products/:id").put(updateProduct);
-router.route("/products/:id").delete(deleteProduct);
+router
+    .route("/products/:id")
+    .put(isAuthentificatedUser, authorizeRole("admin"), updateProduct);
+router
+    .route("/products/:id")
+    .delete(isAuthentificatedUser, authorizeRole("admin"), deleteProduct);
 
 export default router;
