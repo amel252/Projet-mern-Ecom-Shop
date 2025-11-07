@@ -9,8 +9,10 @@ import {
     resetPassword,
     getUserProfile,
     updatePassword,
+    getUserDetails,
+    getAllUsers,
 } from "../controllers/authController.js";
-import { isAuthentificatedUser } from "../middleware/auth.js";
+import { authorizeRole, isAuthentificatedUser } from "../middleware/auth.js";
 
 // Mpd routes
 router.route("/forgot/password").post(forgotPassword);
@@ -26,4 +28,11 @@ router.route("/logout").get(logoutUser);
 router.route("/me").get(isAuthentificatedUser, getUserProfile);
 router.route("/password/update").put(isAuthentificatedUser, updatePassword);
 
+//  admin routes
+router
+    .route("/admin/users")
+    .get(isAuthentificatedUser, authorizeRole("admin"), getAllUsers);
+router
+    .route("/admin/user/:id")
+    .get(isAuthentificatedUser, authorizeRole("admin"), getUserDetails);
 export default router;

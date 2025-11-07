@@ -133,3 +133,39 @@ export const updatePassword = catchAsyncErrors(async (req, res, next) => {
         message: "Password update successufy",
     });
 });
+
+//  update user profile => /api/v1/update (user)
+
+export const updateProfile = catchAsyncErrors(async (req, res, next) => {
+    const newUserData = {
+        name: req.body.name,
+        email: req.body.email,
+    };
+    const user = await User.findByIdAndUpdate(req.user._id, newUserData, {
+        new: true,
+    });
+    res.status(200).json({
+        user,
+    });
+});
+
+//  get all users (admin) /api/v1/admin/users
+export const getAllUsers = catchAsyncErrors(async (req, res, next) => {
+    //  aller récuperer tout les users
+    const users = await User.find();
+    res.status(200).json({
+        users,
+    });
+});
+//  get User details = > (admin ) /api/v1/admin/users/:id
+export const getUserDetails = catchAsyncErrors(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+        return next(
+            new ErrorHandler(`User not found id: ${req.params.id}`, 404)
+        );
+    }
+    res.status(200).json({
+        user,
+    });
+});
