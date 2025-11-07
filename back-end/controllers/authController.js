@@ -116,3 +116,20 @@ export const getUserProfile = catchAsyncErrors(async (req, res, next) => {
         user,
     });
 });
+
+export const updatePassword = catchAsyncErrors(async (req, res, next) => {
+    //  il doit etre connécté , récup l'user a partir de son id
+    const user = await User.findById(req?.user?._id).select("+password");
+    //  vérif de l'ancien MPD
+    const isPasswordMatch = await user.comparePassword(req.body.oldPassword);
+    if (!isPasswordMatch) {
+        return next(new ErrorHandler("Old password is incorrect", 404));
+    }
+    //  l'ancien mpd recoit la nouvel valeur mpd (obligé de marqué la meme chose )
+    user.password = req.body.password;
+    await user.save();
+
+    res.status(200).json({
+        message: "Password update successufy",
+    });
+});
