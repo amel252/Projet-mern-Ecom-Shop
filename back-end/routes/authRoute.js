@@ -9,8 +9,11 @@ import {
     resetPassword,
     getUserProfile,
     updatePassword,
-    getUserDetails,
+    updateProfile,
     getAllUsers,
+    getUserDetails,
+    updateUser,
+    deleteUser,
 } from "../controllers/authController.js";
 import { authorizeRole, isAuthentificatedUser } from "../middleware/auth.js";
 
@@ -24,15 +27,19 @@ router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/logout").get(logoutUser);
 
-// user info
+// user info ( un simple user récup ces données mettre à jou et suppr)
 router.route("/me").get(isAuthentificatedUser, getUserProfile);
 router.route("/password/update").put(isAuthentificatedUser, updatePassword);
+router.route("/me/update").put(isAuthentificatedUser, updateProfile);
 
-//  admin routes
+//  admin routes ( récupere les users , update un profil user n suppr aussi)
 router
     .route("/admin/users")
     .get(isAuthentificatedUser, authorizeRole("admin"), getAllUsers);
 router
-    .route("/admin/user/:id")
-    .get(isAuthentificatedUser, authorizeRole("admin"), getUserDetails);
+    .route("/admin/users/:id")
+    .get(isAuthentificatedUser, authorizeRole("admin"), getUserDetails)
+    .put(isAuthentificatedUser, authorizeRole("admin"), updateUser)
+    .delete(isAuthentificatedUser, authorizeRole("admin"), deleteUser);
+
 export default router;
