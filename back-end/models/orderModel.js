@@ -19,73 +19,74 @@ const orderSchema = new mongoose.Schema(
                 type: String,
                 required: true,
             },
-            //  le user qui commande
-            user: {
-                type: mongoose.Schema.Types.ObjectId,
-                required: "User",
-            },
-            //  un tableau de ce que le user achete
-            orderItems: [
-                {
-                    name: {
-                        type: String,
-                        required: true,
-                    },
-                    quantity: {
-                        type: String,
-                        required: true,
-                    },
-                    image: {
-                        type: String,
-                        required: true,
-                    },
-                    price: {
-                        type: String,
-                        required: true,
-                    },
-                    product: {
-                        type: mongoose.Schema.Types.ObjectId,
-                        required: true,
-                        ref: "Product",
-                    },
+        },
+        // Le user qui commande
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "User",
+        },
+        // Un tableau de ce que le user achete
+        orderItems: [
+            {
+                name: {
+                    type: String,
+                    required: true,
                 },
-            ],
-            paymentMethod: {
-                type: String,
-                required: [true, "Please select payment method"],
-                enum: {
-                    value: ["COD", "Card"],
-                    message: "Please select: COD or Card",
+                quantity: {
+                    type: String,
+                    required: true,
+                },
+                image: {
+                    type: String,
+                    required: true,
+                },
+                price: {
+                    type: String,
+                    required: true,
+                },
+                product: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    required: true,
+                    ref: "Product",
                 },
             },
-            paymentInfo: {
-                id: String,
-                status: String,
+        ],
+        paymentMethod: {
+            type: String,
+            required: [true, "Please select payment method"],
+            enum: {
+                values: ["COD", "Card"],
+                message: "Please select: COD or Card",
             },
-            itemsPrice: {
-                type: Number,
-                required: true,
+        },
+        paymentInfo: {
+            id: String,
+            status: String,
+        },
+        itemsPrice: {
+            type: Number,
+            required: true,
+        },
+        taxAmount: {
+            type: Number,
+            required: true,
+        },
+        shippingAmount: {
+            type: Number,
+            required: true,
+        },
+        totalAmount: {
+            type: Number,
+            required: true,
+        },
+        orderStatus: {
+            type: String,
+            enum: {
+                values: ["Processing", "Shipping", "Delivered"],
+                message: "Please select correct order status",
             },
-            taxAmount: {
-                type: String,
-                required: true,
-            },
-            shippingAmount: {
-                type: Number,
-                required: true,
-            },
-            totalAmount: {
-                type: Number,
-                required: true,
-            },
-            orderStatus: {
-                type: String,
-                enum: {
-                    values: ["Processing", "Shipping", "Delivered"],
-                    message: "Please select correct order status",
-                },
-                default: "Processing",
-            },
+            default: "Processing",
         },
         deliveredAt: Date,
     },

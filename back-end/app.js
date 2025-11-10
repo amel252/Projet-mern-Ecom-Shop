@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: "back-end/config/config.env" });
 import productRoutes from "./routes/productRoute.js";
 import authRoutes from "./routes/authRoute.js";
+import orderRoutes from "./routes/orderRoute.js";
 import { connectedDatabase } from "./config/dbConnect.js";
 // on l'importe sans nom
 import errorMiddleware from "./middleware/error.js";
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 app.use("/api/v1", productRoutes);
 app.use("/api/v1", authRoutes);
+app.use("/api/v1", orderRoutes);
 // middleware de gestion d'erreur
 app.use(errorMiddleware);
 
