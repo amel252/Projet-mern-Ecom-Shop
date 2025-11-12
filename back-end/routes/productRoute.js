@@ -6,6 +6,7 @@ import {
     getProducts,
     newProduct,
     updateProduct,
+    getProductReviews,
 } from "../controllers/productController.js";
 import { isAuthentificatedUser, authorizeRole } from "../middleware/auth.js";
 
@@ -23,6 +24,10 @@ router
 router
     .route("/products/:id")
     .delete(isAuthentificatedUser, authorizeRole("admin"), deleteProduct);
-router.route("/reviews").put(isAuthentificatedUser, createProductReview);
+router
+    .route("/reviews")
+    .put(isAuthentificatedUser, createProductReview)
+    .get(isAuthentificatedUser, getProductReviews);
+// router.route("/reviews/:id").get(isAuthentificatedUser, getProductReviews);
 
 export default router;

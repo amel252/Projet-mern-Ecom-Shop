@@ -73,7 +73,7 @@ export const createProductReview = catchAsyncErrors(async (req, res, next) => {
     const { rating, comment, productId } = req.body;
     // on crée un objet qui représente user review
     const review = {
-        user: req?.user?.id,
+        user: req?.user?._id,
         rating: Number(rating),
         comment,
     };
@@ -91,7 +91,7 @@ export const createProductReview = catchAsyncErrors(async (req, res, next) => {
     if (isReviewed) {
         //
         product.reviews.forEach((review) => {
-            if (review?.user?.toString() === req?.user?.toString()) {
+            if (review?.user?.toString() === req?.user?._id.toString()) {
                 (review.comment = comment), (review.rating = rating);
             }
         });
@@ -109,5 +109,16 @@ export const createProductReview = catchAsyncErrors(async (req, res, next) => {
     await product.save({ validateBeforeSave: false });
     res.status(200).json({
         success: true,
+    });
+});
+
+//  get product reviews => /api/v1/reviews
+export const getProductReviews = catchAsyncErrors(async (req, res, next) => {
+    const product = await Product.findById(req.query.id);
+    if (!product) {
+        return next(new ErrorHandler("Product not found ", 400));
+    }
+    res.status(200).json({
+        reviews: product.reviews,
     });
 });
