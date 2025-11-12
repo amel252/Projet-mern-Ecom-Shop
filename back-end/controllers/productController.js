@@ -59,10 +59,55 @@ export const updateProduct = catchAsyncErrors(async (req, res, next) => {
 export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
     let product = await Product.findByIdAndDelete(req?.params.id);
     if (!product) {
-        return next(new ErrorHandler("Produit non trouvé", 404));
+        return next(new ErrorHandler("Product does not existe", 404));
     }
     await product.deleteOne();
     res.status(200).json({
-        message: "Produit supprimé",
+        message: "Product deleted",
+    });
+});
+
+// create/ update product review => api/v1/review
+export const createProductReview = catchAsyncErrors(async (req, res, next) => {
+    // récupere le rating , le comment , productId
+    const { rating, comment, productId } = req.body;
+    // on crée un objet qui représente user review
+    const review = {
+        user: req?.user?.id,
+        rating: Number(rating),
+        comment,
+    };
+    //  search product from bd pour l'évalué
+    const product = await Product.findById(productId);
+    //  si produit n'existe pas
+    if (!product) {
+        return next(new ErrorHandler("Product not found"));
+    }
+    //  we have an array because product can have many ratings
+    //  on vérifie si l'user a mis une evaluation (dans la BD)
+    const isReviewed = product?.reviews.find(
+        (r) => r.user.toString() === req?.user?._id.toString()
+    );
+    if (isReviewed) {
+        //
+        product.reviews.forEach((review) => {
+            if (review?.user?.toString() === req?.user?.toString()) {
+                (review.comment = comment), (review.rating = rating);
+            }
+        });
+    } else {
+        //  on ajoute le nouveau avis à l'array
+        product.reviews.push(review);
+        //  mise a jour du nombre d'avis
+        product.numOfReviews = product.reviews.length;
+    }
+    //  calculé la moyenne du produit du reviews existantes
+    product.ratings =
+        product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        product.reviews.length;
+    //  on sauvegarde le produit en BD
+    await product.save({ validateBeforeSave: false });
+    res.status(200).json({
+        success: true,
     });
 });
