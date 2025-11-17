@@ -1,9 +1,12 @@
 import "./App.css";
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 
 function App() {
     return (
         <div className="App">
-            <h1 className="text-center bg-success p-y-2">Un super site </h1>
+            <Header />
+            <Footer />
         </div>
     );
 }
