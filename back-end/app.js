@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import dotenv from "dotenv";
 dotenv.config({ path: "back-end/config/config.env" });
+import cors from "cors"; // ✅ AJOUT
 import productRoutes from "./routes/productRoute.js";
 import authRoutes from "./routes/authRoute.js";
 import orderRoutes from "./routes/orderRoute.js";
@@ -14,6 +15,14 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 connectedDatabase();
+
+// ✅ CORS DOIT ÊTRE AVANT LES ROUTES
+app.use(
+    cors({
+        origin: "http://localhost:3000",
+        credentials: true,
+    })
+);
 
 app.use(express.json());
 app.use(cookieParser());
