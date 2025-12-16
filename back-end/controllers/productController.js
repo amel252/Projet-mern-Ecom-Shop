@@ -14,7 +14,7 @@ export const newProduct = catchAsyncErrors(async (req, res) => {
 });
 
 // getAllProducts
-export const getProducts = catchAsyncErrors(async (req, res) => {
+export const getProducts = catchAsyncErrors(async (req, res, next) => {
     const resPerPage = 4;
 
     let apiFilters = new APIFilters(Product, req.query).search().filters();
