@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 //  création des api
-//  récuperer nos produits
+//  récuperer nos produits (getProducts)
 export const productApi = createApi({
     //  on réécri ce que on a mis dans const
     reducerPath: "productApi",
@@ -14,6 +14,9 @@ export const productApi = createApi({
                 url: "/products",
             }),
         }),
+        getProductDetails: builder.query({
+            query: (id) => `/products/${id}`,
+        }),
     }),
 });
-export const { useGetProductsQuery } = productApi;
+export const { useGetProductsQuery, useGetProductDetailsQuery } = productApi;
