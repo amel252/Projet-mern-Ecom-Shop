@@ -29,7 +29,7 @@ const ProductItem = ({ product }) => {
                             {product?.numOfReviews || 0}
                         </span>
                     </div>
-                    <p class="card-text mt-2">{product?.price}</p>
+                    <p class="card-text mt-2">${product?.price}</p>
                     {/*  voir les détails du produit */}
                     <Link
                         to={`/product/${product?._id}`}
