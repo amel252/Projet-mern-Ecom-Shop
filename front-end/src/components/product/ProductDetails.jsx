@@ -71,8 +71,8 @@ const ProductDetails = () => {
                 </div>
 
                 <div className="col-12 col-lg-5 mt-5">
-                    <h3>Lorem Ipsum</h3>
-                    <p id="product_id">{product?._id}</p>
+                    <h3>{product?.name}</h3>
+                    <p id="product_id">Product # {product?._id}</p>
 
                     <hr />
 
