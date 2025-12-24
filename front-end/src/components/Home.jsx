@@ -6,9 +6,20 @@ import ProductItem from "./product/ProductItem";
 import Loader from "./layout/Loader";
 import toast from "react-hot-toast";
 import CustomPagination from "./layout/CustomPagination";
+import Filter from "./layout/Filter";
+import { useSearchParams } from "react-router-dom";
 
 const Home = () => {
-    const { data, isLoading, error, isError } = useGetProductsQuery();
+    let [searchParams] = useSearchParams();
+
+    //  si on est sur une page sans pagination on reste sur la premiere , si
+    const page = Number(searchParams.get("page")) || 1;
+    //  si on n'a pas de mot clé sur la barre de recherche le site revient sur home
+    const keyword = searchParams.get("keyword") || "";
+    //  je les stoque dans params
+    const params = { page, keyword };
+
+    const { data, isLoading, error, isError } = useGetProductsQuery(params);
     console.log(data);
 
     //  si on a un souci avec la récup du data
@@ -17,6 +28,9 @@ const Home = () => {
             toast.error(error?.data?.message || "Error is occured");
         }
     }, [isError]);
+
+    //  si le motcles existe je prends 4 coloms sinon 3
+    const columnSize = keyword ? 4 : 3;
     if (isLoading) return <Loader />;
 
     return (
@@ -24,14 +38,29 @@ const Home = () => {
             <MetaData title="Buy your product online" />
             <div className="container">
                 <div className="row">
-                    <div className="col-12 col-sm-6 col-md-12">
+                    {keyword && (
+                        <div className="col-6 col-md-3 mt-5">
+                            <Filter />
+                        </div>
+                    )}
+                    <div
+                        className={
+                            keyword ? "col-6 col-md-9" : "col-6 col-md-12"
+                        }
+                    >
                         <h1 id="products_heading" className="text-secondary">
-                            Latest Products
+                            {/*  si on fait une recherche on affiche le nombre d'article avec (keyword)sinon le ancien titre   */}
+                            {keyword
+                                ? `${data?.products?.length}Products found with keyword:${keyword}`
+                                : "Latest Products"}
                         </h1>
                         <section id="products" className="mt-5">
                             <div className="row">
                                 {data?.products?.map((product) => (
-                                    <ProductItem product={product} />
+                                    <ProductItem
+                                        product={product}
+                                        columnSize={columnSize}
+                                    />
                                 ))}
                             </div>
                         </section>

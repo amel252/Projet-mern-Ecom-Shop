@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import renderStars from "../../utils/renderStars";
 
 // product c notre props pour qu'on puisse l'utiliser dans home
-const ProductItem = ({ product }) => {
+const ProductItem = ({ product, columnSize }) => {
     return (
-        <div class="col-sm-12 col-md-6 col-lg-3 my-3">
+        <div class={`col-sm-12 col-md-6 col-lg-${columnSize} my-3`}>
             <div class="card p-3 rounded">
                 <img
                     class="card-img-top mx-auto"
