@@ -17,14 +17,37 @@ export const newProduct = catchAsyncErrors(async (req, res) => {
 export const getProducts = catchAsyncErrors(async (req, res, next) => {
     const resPerPage = 4;
 
-    let apiFilters = new APIFilters(Product, req.query).search().filters();
-    // on met let pour qu'on puisse la réassigné
-    let products = await apiFilters.query;
+    //  récupération de valeur de filtre
+    const priceGte = req.query["price[gte]"]
+        ? Number(req.query["price[gte]"])
+        : undefined;
+    const priceLte = req.query["price[lte]"]
+        ? Number(req.query["price[lte]"])
+        : undefined;
+    const keyword = req.query.keyword || undefined;
+    const page = Number(req.query.page) || 1;
 
-    let filteredProductsCount = products.length;
-    apiFilters.pagination(resPerPage);
+    //  construction de filtre
+    const filter = {};
+    if (priceGte !== undefined || priceLte !== undefined) {
+        filter.price = {};
+        if (priceGte !== undefined) filter.price.$gte = priceGte;
+        if (priceLte !== undefined) filter.price.$lte = priceLte;
+    }
+    if (keyword) {
+        filter.name = {
+            $regex: keyword,
+            $options: "i",
+        };
+    }
 
-    products = await apiFilters.query.clone();
+    //  chercher les produits filtrées
+    const totalProducts = await Product.find(filter);
+    const filteredProductsCount = totalProducts.length;
+
+    const products = await Product.find(filter)
+        .limit(resPerPage)
+        .skip(resPerPage * (page - 1));
 
     res.status(200).json({
         resPerPage,

@@ -16,11 +16,25 @@ const Home = () => {
     const page = Number(searchParams.get("page")) || 1;
     //  si on n'a pas de mot clé sur la barre de recherche le site revient sur home
     const keyword = searchParams.get("keyword") || "";
-    //  je les stoque dans params
-    const params = { page, keyword };
+
+    //recherche de valeur min et max
+    const rawMin = searchParams.get("price[gte]");
+    const rawMax = searchParams.get("price[lte]");
+
+    //  si le nombre n'est pas null on le prend et converti en nombre sinon undefined
+    const min = rawMin !== null ? Number(rawMin) : undefined;
+    const max = rawMax !== null ? Number(rawMax) : undefined;
+
+    //  faire la copie
+    const params = {
+        page,
+        keyword,
+        ...(min !== undefined && { "price[gte]": min }),
+        ...(max !== undefined && { "price[lte]": max }),
+    };
 
     const { data, isLoading, error, isError } = useGetProductsQuery(params);
-    console.log(data);
+    // console.log(data);
 
     //  si on a un souci avec la récup du data
     useEffect(() => {

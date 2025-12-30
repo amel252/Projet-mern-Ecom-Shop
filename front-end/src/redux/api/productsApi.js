@@ -12,10 +12,8 @@ export const productApi = createApi({
         getProducts: builder.query({
             query: (params) => ({
                 url: "/products",
-                params: {
-                    page: params?.page,
-                    keyword: params?.keyword,
-                },
+                //  on met sans spécification c deja travaillé dans home
+                params: params,
             }),
         }),
         getProductDetails: builder.query({
