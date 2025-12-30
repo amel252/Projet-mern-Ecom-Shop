@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getPriceQueryParams } from "../../helpers/helpers.js";
+import { PRODUCT_CATEGORY } from "../../constants/constants.js";
 
 const Filter = () => {
     //  valeur minimal et maximal
@@ -10,6 +11,42 @@ const Filter = () => {
     const navigate = useNavigate();
     let [searchParams] = useSearchParams();
 
+    //  on combine 2 filtres (prix et category)
+    useEffect(() => {
+        //  si il contient la valeur min , l'a mettre a jour
+        if (searchParams.has("min")) {
+            setMin(Number(searchParams.get("min")));
+        } else {
+            setMin(0);
+        }
+        if (searchParams.has("max")) {
+            setMax(Number(searchParams.get("max")));
+        } else {
+            setMax(0);
+        }
+    }, [searchParams]);
+
+    const handleClick = (checkbox) => {
+        const updatedParams = new URLSearchParams(searchParams);
+        //  on récupere checkboxes
+        const checkboxes = document.getElementsByName(checkbox.name);
+        //  dans chaque tour de boucle , si il est !=  il sera pas actif
+        checkboxes.forEach((item) => {
+            if (item != checkbox) {
+                item.checked = false;
+            }
+        });
+        // si l'element est checked
+        if (checkbox.checked) {
+            updatedParams.set(checkbox.name, checkbox.value);
+        } else {
+            updatedParams.delete(checkbox.name);
+        }
+        navigate({
+            pathname: window.location.pathname,
+            search: updatedParams.toString(),
+        });
+    };
     //  fonction price filter
     const handleButtonClick = (e) => {
         e.preventDefault();
@@ -78,33 +115,27 @@ const Filter = () => {
             </form>
             <hr />
             <h5 className="mb-3">Category</h5>
-
-            <div className="form-check">
-                <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="category"
-                    id="check4"
-                    value="Category 1"
-                />
-                <label className="form-check-label" for="check4">
-                    {" "}
-                    Category 1{" "}
-                </label>
-            </div>
-            <div className="form-check">
-                <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="category"
-                    id="check5"
-                    value="Category 2"
-                />
-                <label className="form-check-label" for="check5">
-                    {" "}
-                    Category 2{" "}
-                </label>
-            </div>
+            {PRODUCT_CATEGORY?.map((category) => (
+                <div className="form-check" key={category}>
+                    <input
+                        className="form-check-input"
+                        type="checkbox"
+                        name="category"
+                        id={`check_${category}`}
+                        value={category}
+                        checked={searchParams.get("category") === category}
+                        onClick={(e) => {
+                            handleClick(e.target);
+                        }}
+                    />
+                    <label
+                        className="form-check-label"
+                        htmlFor={`check_${category}`}
+                    >
+                        {category}
+                    </label>
+                </div>
+            ))}
 
             <hr />
             <h5 className="mb-3">Ratings</h5>
@@ -117,7 +148,7 @@ const Filter = () => {
                     id="check7"
                     value="5"
                 />
-                <label className="form-check-label" for="check7">
+                <label className="form-check-label" htmlFor="check7">
                     <span className="star-rating">★ ★ ★ ★ ★</span>
                 </label>
             </div>
@@ -129,7 +160,7 @@ const Filter = () => {
                     id="check8"
                     value="4"
                 />
-                <label className="form-check-label" for="check8">
+                <label className="form-check-label" htmlFor="check8">
                     <span className="star-rating">★ ★ ★ ★ ☆</span>
                 </label>
             </div>

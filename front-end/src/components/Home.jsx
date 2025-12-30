@@ -16,6 +16,8 @@ const Home = () => {
     const page = Number(searchParams.get("page")) || 1;
     //  si on n'a pas de mot clé sur la barre de recherche le site revient sur home
     const keyword = searchParams.get("keyword") || "";
+    //  on filtre par catégorie
+    const category = searchParams.get("category") || "";
 
     //recherche de valeur min et max
     const rawMin = searchParams.get("price[gte]");
@@ -31,6 +33,7 @@ const Home = () => {
         keyword,
         ...(min !== undefined && { "price[gte]": min }),
         ...(max !== undefined && { "price[lte]": max }),
+        ...(category && { category }),
     };
 
     const { data, isLoading, error, isError } = useGetProductsQuery(params);
