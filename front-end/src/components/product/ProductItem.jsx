@@ -20,7 +20,7 @@ const ProductItem = ({ product, columnSize }) => {
                     </h5>
                     <div class="ratings mt-auto d-flex">
                         <div class="star-ratings mt-auto d-flex align-items-center">
-                            {renderStars(product?.rating)}
+                            {renderStars(product?.ratings)}
                         </div>
                         <span
                             id="no_of_reviews"

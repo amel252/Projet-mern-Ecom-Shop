@@ -18,10 +18,12 @@ const Home = () => {
     const keyword = searchParams.get("keyword") || "";
     //  on filtre par catégorie
     const category = searchParams.get("category") || "";
+    //  on filtre par ratings
+    const rating = searchParams.get("ratings");
 
     //recherche de valeur min et max
-    const rawMin = searchParams.get("price[gte]");
-    const rawMax = searchParams.get("price[lte]");
+    const rawMin = searchParams.get("min");
+    const rawMax = searchParams.get("max");
 
     //  si le nombre n'est pas null on le prend et converti en nombre sinon undefined
     const min = rawMin !== null ? Number(rawMin) : undefined;
@@ -33,10 +35,16 @@ const Home = () => {
         keyword,
         ...(min !== undefined && { "price[gte]": min }),
         ...(max !== undefined && { "price[lte]": max }),
+        ...(rating && { ratings: rating }),
         ...(category && { category }),
     };
 
-    const { data, isLoading, error, isError } = useGetProductsQuery(params);
+    //  filter pour eviter des valeurs undefined
+    const cleanParams = Object.fromEntries(
+        Object.entries(params).filter(([__, v]) => v !== undefined && v !== "")
+    );
+    const { data, isLoading, error, isError } =
+        useGetProductsQuery(cleanParams);
     // console.log(data);
 
     //  si on a un souci avec la récup du data

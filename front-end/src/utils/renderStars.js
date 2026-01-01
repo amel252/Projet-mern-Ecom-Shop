@@ -1,7 +1,7 @@
 // fonction permettant de recevoir une note
-const renderStars = (rating) => {
+const renderStars = (rating = 0) => {
     // arrondir le nombre
-    const fullStars = Math.round(rating);
+    const fullStars = Math.round(Number(rating));
     return (
         <>
             {
@@ -14,7 +14,9 @@ const renderStars = (rating) => {
                             color: i < fullStars ? "#ffb829" : "#e4e5e9",
                             fontSize: "20px",
                         }}
-                    ></span>
+                    >
+                        ★
+                    </span>
                 ))
             }
         </>

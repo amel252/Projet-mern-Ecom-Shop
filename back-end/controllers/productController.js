@@ -27,7 +27,7 @@ export const getProducts = catchAsyncErrors(async (req, res, next) => {
     const keyword = req.query.keyword || undefined;
     const page = Number(req.query.page) || 1;
 
-    //  construction de filtre
+    //  construction de filtre par prix
     const filter = {};
     if (priceGte !== undefined || priceLte !== undefined) {
         filter.price = {};
@@ -41,6 +41,15 @@ export const getProducts = catchAsyncErrors(async (req, res, next) => {
         };
     }
 
+    //  filtre par rapport à rating (combiner es filtres)
+    // if (req.query.ratings) {
+    //     filter.ratings = {
+    //         $gte: Number(req.query.ratings),
+    //     };
+    // }
+    if (req.query.ratings) {
+        query.ratings = { $gte: req.query.ratings };
+    }
     //  chercher les produits filtrées
     const totalProducts = await Product.find(filter);
     const filteredProductsCount = totalProducts.length;
