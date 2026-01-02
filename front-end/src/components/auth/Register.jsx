@@ -1,37 +1,64 @@
 import React, { useEffect, useState } from "react";
-import { useLoginMutation } from "../../redux/api/authApi";
+import { useRegisterMutation } from "../../redux/api/authApi";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MetaData from "../layout/MetaData";
 
-const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [login, { isLoading, error, data }] = useLoginMutation();
+const Register = () => {
+    const navigate = useNavigate();
+    const [user, setUser] = useState({
+        name: "",
+        email: "",
+        password: "",
+    });
+    const { name, email, password } = user;
+
+    const [register, { isLoading, error, data }] = useRegisterMutation();
 
     useEffect(() => {
         if (error) {
             toast.error(error);
         }
     }, [data, error]);
+
     const submitHandler = (e) => {
         e.preventDefault();
-        //  body (email, password)
-        const loginData = { email, password };
-        login(loginData);
+        //  body (username , email, password)
+        const signupData = { name, email, password };
+        register(signupData);
+        //  une fois register est faite , je redirige vers login
+    };
+    const onChange = (e) => {
+        //    on le cible chaque input et on lui donne la nouvel valeur
+        setUser({ ...user, [e.target.name]: e.target.value });
     };
     return (
         <>
-            <MetaData title={"login"} />
+            <MetaData title={"register"} />
             <div className="row wrapper">
                 <div className="col-10 col-lg-5">
                     <form
                         className="shadow rounded bg-body"
                         onSubmit={submitHandler}
                     >
-                        <h2 className="mb-4">Login</h2>
+                        <h2 className="mb-4">Register</h2>
+
                         <div className="mb-3">
-                            <label htmlFor="email_field" className="form-label">
+                            <label htmlFor="name_field" className="form-label">
+                                Name
+                            </label>
+                            <input
+                                type="text"
+                                id="name_field"
+                                className="form-control"
+                                name="name"
+                                value={name}
+                                onChange={onChange}
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label for="email_field" className="form-label">
                                 Email
                             </label>
                             <input
@@ -40,7 +67,7 @@ const Login = () => {
                                 className="form-control"
                                 name="email"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={onChange}
                             />
                         </div>
 
@@ -57,29 +84,17 @@ const Login = () => {
                                 className="form-control"
                                 name="password"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={onChange}
                             />
                         </div>
-                        <Link to="/password/forgot" className="float-end mb-4">
-                            {" "}
-                            Forgot Password?
-                        </Link>
 
                         <button
-                            disabled={isLoading}
-                            id="login_button"
+                            id="register_button"
                             type="submit"
                             className="btn w-100 py-2"
                         >
-                            {isLoading ? "Authenticating..." : "Login"}
+                            {isLoading ? "Creating..." : "Register"}
                         </button>
-
-                        <div className="my-3">
-                            <Link to="/register" className="float-end mb-4">
-                                {" "}
-                                New User?
-                            </Link>
-                        </div>
                     </form>
                 </div>
             </div>
@@ -87,4 +102,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;
