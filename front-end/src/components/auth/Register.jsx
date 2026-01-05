@@ -13,11 +13,19 @@ const Register = () => {
     });
     const { name, email, password } = user;
 
-    const [register, { isLoading, error, data }] = useRegisterMutation();
+    const [register, { isLoading, error, data, isSuccess }] =
+        useRegisterMutation();
 
+    // ✅ succès
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success("Compte created successfuly");
+            navigate("/login");
+        }
+    }, [isSuccess, navigate]);
     useEffect(() => {
         if (error) {
-            toast.error(error);
+            toast.error(error?.data?.message || "register failed");
         }
     }, [data, error]);
 

@@ -4,7 +4,7 @@ import { useGetMeQuery } from "../../redux/api/userApi";
 
 const Header = () => {
     const { data } = useGetMeQuery();
-    console.log(data);
+    // console.log(data);
 
     return (
         <nav className="navbar row">
