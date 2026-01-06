@@ -3,25 +3,38 @@ import { useLoginMutation } from "../../redux/api/authApi";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import MetaData from "../layout/MetaData";
+import { useSelector } from "react-redux";
 
 const Login = () => {
+    const { isAuthenticated } = useSelector((state) => state.auth);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [login, { isLoading, error, data }] = useLoginMutation();
+    const [login, { isLoading, error, isSuccess }] = useLoginMutation();
 
     const navigate = useNavigate();
+
+    // ❌ Erreur login
     useEffect(() => {
         if (error) {
             toast.error(error?.data?.message || "Login failed");
         }
     }, [error]);
-    // rajout chatGPT
+
+    // ✅ Succès login
     useEffect(() => {
-        if (data) {
+        if (isSuccess) {
             toast.success("Connexion réussie");
             navigate("/");
         }
-    }, [data, navigate]);
+    }, [isSuccess, navigate]);
+
+    // 🔐 Déjà connecté
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/");
+        }
+    }, [isAuthenticated, navigate]);
+
     const submitHandler = (e) => {
         e.preventDefault();
         //  body (email, password)

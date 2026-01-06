@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+//  les infos de user avant l'authentification
 const initialState = {
     //  au début n'est pax connecté est null
     user: null,

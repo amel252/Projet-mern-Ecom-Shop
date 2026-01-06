@@ -3,8 +3,11 @@ import { useRegisterMutation } from "../../redux/api/authApi";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import MetaData from "../layout/MetaData";
+import { useSelector } from "react-redux";
 
 const Register = () => {
+    const { isAuthenticated } = useSelector((state) => state.auth);
+
     const navigate = useNavigate();
     const [user, setUser] = useState({
         name: "",
@@ -13,28 +16,34 @@ const Register = () => {
     });
     const { name, email, password } = user;
 
-    const [register, { isLoading, error, data, isSuccess }] =
-        useRegisterMutation();
-
-    // ✅ succès
+    const [register, { isLoading, error, isSuccess }] = useRegisterMutation();
+    // 🔐 Si déjà connecté → home
     useEffect(() => {
-        if (isSuccess) {
-            toast.success("Compte created successfuly");
-            navigate("/login");
+        if (isAuthenticated) {
+            navigate("/");
         }
-    }, [isSuccess, navigate]);
+    }, [isAuthenticated, navigate]);
+
+    // ❌ Erreur inscription
     useEffect(() => {
         if (error) {
             toast.error(error?.data?.message || "register failed");
         }
-    }, [data, error]);
+    }, [error]);
+
+    // ✅ Succès inscription
+    useEffect(() => {
+        if (isSuccess) {
+            toast.success("user is registered successfully");
+            navigate("/login");
+        }
+    }, [isSuccess, navigate]);
 
     const submitHandler = (e) => {
         e.preventDefault();
         //  body (username , email, password)
         const signupData = { name, email, password };
         register(signupData);
-        //  une fois register est faite , je redirige vers login
     };
     const onChange = (e) => {
         //    on le cible chaque input et on lui donne la nouvel valeur
@@ -66,7 +75,7 @@ const Register = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label for="email_field" className="form-label">
+                            <label htmlFor="email_field" className="form-label">
                                 Email
                             </label>
                             <input
