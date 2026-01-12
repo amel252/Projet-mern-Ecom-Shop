@@ -83,6 +83,7 @@ const Home = () => {
                             <div className="row">
                                 {data?.products?.map((product) => (
                                     <ProductItem
+                                        key={product._id}
                                         product={product}
                                         columnSize={columnSize}
                                     />

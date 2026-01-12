@@ -1,10 +1,15 @@
 import React from "react";
 import Search from "./Search";
 import { useGetMeQuery } from "../../redux/api/userApi";
+import { useSelector } from "react-redux";
 
 const Header = () => {
-    const { data } = useGetMeQuery();
-    // console.log(data);
+    const { data: userData } = useGetMeQuery();
+    console.log(userData);
+    //  une fois l'user est connécté j'affiche son nom a coté
+
+    // const { user } = useSelector((state) => state.auth);
+    // console.log(user);
 
     return (
         <nav className="navbar row">
@@ -35,8 +40,61 @@ const Header = () => {
                         0
                     </span>
                 </a>
-
                 <div className="ms-4 dropdown">
+                    {userData ? (
+                        <>
+                            <button
+                                className="btn dropdown-toggle text-white"
+                                type="button"
+                                id="dropDownMenuButton"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                <figure className="avatar avatar-nav">
+                                    <img
+                                        src={
+                                            userData.avatar ||
+                                            "../images/default_avatar.jpg"
+                                        }
+                                        alt={userData.name}
+                                        className="rounded-circle"
+                                    />
+                                </figure>
+                                <span>{userData.name}</span>
+                            </button>
+                            <div
+                                className="dropdown-menu w-100"
+                                aria-labelledby="dropDownMenuButton"
+                            >
+                                {userData.role === "admin" && (
+                                    <a
+                                        className="dropdown-item"
+                                        href="/admin/dashboard"
+                                    >
+                                        Dashboard
+                                    </a>
+                                )}
+                                <a className="dropdown-item" href="/me/orders">
+                                    Orders
+                                </a>
+                                <a className="dropdown-item" href="/me/profile">
+                                    Profile
+                                </a>
+                                <a
+                                    className="dropdown-item text-danger"
+                                    href="/logout"
+                                >
+                                    Logout
+                                </a>
+                            </div>
+                        </>
+                    ) : (
+                        <a href="/login" className="btn ms-4" id="login_btn">
+                            Login
+                        </a>
+                    )}
+                </div>
+                {/* <div className="ms-4 dropdown">
                     <button
                         className="btn dropdown-toggle text-white"
                         type="button"
@@ -51,7 +109,7 @@ const Header = () => {
                                 className="rounded-circle"
                             />
                         </figure>
-                        <span>User</span>
+                        <span>{userData?.name}</span>
                     </button>
                     <div
                         className="dropdown-menu w-100"
@@ -77,12 +135,12 @@ const Header = () => {
                             Logout{" "}
                         </a>
                     </div>
-                </div>
+                </div> */}
 
-                <a href="/login" className="btn ms-4" id="login_btn">
+                {/* <a href="/login" className="btn ms-4" id="login_btn">
                     {" "}
                     Login{" "}
-                </a>
+                </a> */}
             </div>
         </nav>
     );

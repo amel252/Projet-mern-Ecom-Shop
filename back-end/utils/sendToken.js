@@ -1,5 +1,7 @@
 export default (user, statusCode, res) => {
     // create jwt token
+    console.log(user);
+
     const token = user.getJwtToken();
     const options = {
         exprires: new Date(

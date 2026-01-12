@@ -8,6 +8,7 @@ export const authApi = createApi({
     reducerPath: "authApi",
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:4000/api/v1",
+        credentials: "include",
     }),
     endpoints: (builder) => ({
         register: builder.mutation({
@@ -18,23 +19,15 @@ export const authApi = createApi({
                     body,
                 };
             },
-            async onQueryStarted(args, { dispatch, queryFulFilled }) {
+            async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     // une fois les donnés user sont envoyé
-                    const { data } = await queryFulFilled;
+                    const { data } = await queryFulfilled;
                     await dispatch(userApi.endpoints.getMe.initiate(null));
                 } catch (error) {
                     console.log(error);
                 }
             },
-            // async onQueryStarted(args, { dispatch, queryFulfilled }) {
-            //     try {
-            //         const { data } = await queryFulfilled;
-            //         dispatch(setUser(data.user));
-            //     } catch (error) {
-            //         console.log(error);
-            //     }
-            // },
         }),
         login: builder.mutation({
             query(body) {
@@ -44,10 +37,10 @@ export const authApi = createApi({
                     body,
                 };
             },
-            async onQueryStarted(args, { dispatch, queryFulFilled }) {
+            async onQueryStarted(args, { dispatch, queryFulfilled }) {
                 try {
                     // une fois les donnés user sont envoyé
-                    const { data } = await queryFulFilled;
+                    const { data } = await queryFulfilled;
                     await dispatch(userApi.endpoints.getMe.initiate(null));
                 } catch (error) {
                     console.log(error);

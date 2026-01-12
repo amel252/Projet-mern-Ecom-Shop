@@ -18,7 +18,7 @@ export const userSlice = createSlice({
             state.user = action.payload;
             //  payload c'est les donnés qu'on envoit le corps (name, email, password)
         },
-        setInAuthenticated(state, action) {
+        setIsAuthenticated(state, action) {
             state.isAuthenticated = action.payload;
         },
         setLoading(state, action) {
@@ -27,4 +27,4 @@ export const userSlice = createSlice({
     },
 });
 export default userSlice.reducer;
-export const { setUser, setInAuthenticated, setLoading } = userSlice.actions;
+export const { setUser, setIsAuthenticated, setLoading } = userSlice.actions;
