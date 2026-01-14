@@ -1,15 +1,31 @@
 import React from "react";
 import Search from "./Search";
 import { useGetMeQuery } from "../../redux/api/userApi";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useLazyLogoutQuery } from "../../redux/api/authApi";
+import { logoutUser } from "../../redux/features/userSlice";
 
 const Header = () => {
-    const { data } = useGetMeQuery();
-    console.log(data);
+    const [logout] = useLazyLogoutQuery();
+    const { isLoading } = useGetMeQuery();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const { user } = useSelector((state) => state.auth);
     console.log(user);
+
+    const logoutHandler = async () => {
+        try {
+            //  on appel la mutation
+            await logout().unwrap();
+            //  il fait le nettoyage
+            dispatch(logoutUser());
+            navigate("/login");
+        } catch (error) {
+            console.error("Signout error", error);
+        }
+    };
 
     return (
         <nav className="navbar row">
@@ -76,9 +92,12 @@ const Header = () => {
                                 Profile{" "}
                             </Link>
 
-                            <Link className="dropdown-item text-danger" to="/">
-                                {" "}
-                                Logout{" "}
+                            <Link
+                                onClick={logoutHandler}
+                                className="dropdown-item text-danger"
+                                to="/"
+                            >
+                                Logout
                             </Link>
                         </div>
                     </div>
