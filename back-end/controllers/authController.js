@@ -116,7 +116,7 @@ export const getUserProfile = catchAsyncErrors(async (req, res, next) => {
         user,
     });
 });
-
+//  mise a jour PWD
 export const updatePassword = catchAsyncErrors(async (req, res, next) => {
     //  il doit etre connécté , récup l'user a partir de son id
     const user = await User.findById(req?.user?._id).select("+password");
