@@ -1,0 +1,63 @@
+import React, { useState } from "react";
+//  on a utilisé location pour que url fonctionne
+import { Link, useLocation } from "react-router-dom";
+
+const SideBarMenu = () => {
+    const menuItems = [
+        {
+            name: "profile",
+            url: "/me/profile",
+            icon: "fas fa-user",
+        },
+        {
+            name: "Update Profile",
+            url: "/me/update_profile",
+            icon: "fas fa-user",
+        },
+        {
+            name: "Update Avatar",
+            url: "/me/update_avatar",
+            icon: "fas fa-user-circle",
+        },
+        {
+            name: "update Password",
+            url: "/me/update_password",
+            icon: "fas fa-lock",
+        },
+    ];
+    const location = useLocation();
+    //  mettre a jour le path
+    const [activeMenuItem, setActiveMenuItem] = useState(location.pathname);
+    const handleMenuItem = (menuItemUrl) => {
+        setActiveMenuItem(menuItemUrl);
+    };
+    return (
+        <div className="list-group mt-5 pl-4">
+            {menuItems?.map((menuItem, index) => (
+                <>
+                    <Link
+                        key={index}
+                        to={menuItem.url}
+                        className={`fw-bold list-group-item list-group-item-action
+                            ${
+                                activeMenuItem.includes(menuItem.url)
+                                    ? "active"
+                                    : ""
+                            }`}
+                        onClick={() => handleMenuItem(menuItem.url)}
+                        aria-current={
+                            activeMenuItem.includes(menuItem.url)
+                                ? "true"
+                                : "false"
+                        }
+                    >
+                        <i className={`${menuItem.icon} fa-fw pe-2`}></i>{" "}
+                        {menuItem.name}
+                    </Link>
+                </>
+            ))}
+        </div>
+    );
+};
+
+export default SideBarMenu;
