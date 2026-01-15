@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setIsAuthenticated, setUser, setLoading } from "../features/userSlice";
+import UpdateProfile from "../../components/user/UpdateProfile";
 
 // creation de l'api
 
@@ -32,7 +33,17 @@ export const userApi = createApi({
             },
             providesTags: ["User"],
         }),
+        UpdateProfile: builder.mutation({
+            query(body) {
+                return {
+                    url: "/me/update",
+                    method: "PUT",
+                    body,
+                };
+            },
+            providesTags: ["User"],
+        }),
     }),
 });
 
-export const { useGetMeQuery } = userApi;
+export const { useGetMeQuery, useUpdateProfileMutation } = userApi;
