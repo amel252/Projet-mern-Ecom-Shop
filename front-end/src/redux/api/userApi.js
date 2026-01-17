@@ -52,8 +52,8 @@ export const userApi = createApi({
                     body,
                 };
             },
+            providesTags: ["User"],
         }),
-        providesTags: ["User"],
     }),
 });
 

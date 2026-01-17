@@ -6,7 +6,7 @@ import sendToken from "../utils/sendToken.js";
 import sendEmail from "../utils/sendEmail.js";
 import { getResetPasswordTemplate } from "../utils/emailTemplates.js";
 import crypto from "crypto";
-import { upload_file } from "../utils/cloudinary.js";
+import { upload_file, delete_file } from "../utils/cloudinary.js";
 
 // inscription de User
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -202,17 +202,27 @@ export const deleteUser = catchAsyncErrors(async (req, res, next) => {
 //  upload user Avatar => /api/v1/me/upload_avatar
 
 export const uploadAvatar = catchAsyncErrors(async (req, res, next) => {
+    if (!req.body.avatar) {
+        return res.status(400).json({
+            success: false,
+            message: "no file sended ",
+        });
+    }
     //  dans cloudinary on aura fichier Home/avatar  qui stock imgs
     const avatarResponse = await upload_file(req.body.avatar, "Home/avatar");
 
-    //remove previous avatar
-    if (req?.avatar?.url) {
-        await delete_file(req?.user?.avatar?.public_id);
+    if (req.user?.avatar?.public_id) {
+        await delete_file(req.user.avatar.public_id);
     }
-    const user = await User.findByIdAndUpdate(req?.user._id, {
-        avatar: avatarResponse,
-    });
+
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        { avatar: avatarResponse },
+        { new: true, runValidators: true }
+    );
+
     res.status(200).json({
+        success: true,
         user,
     });
 });
