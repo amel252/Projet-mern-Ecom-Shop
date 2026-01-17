@@ -6,6 +6,7 @@ import sendToken from "../utils/sendToken.js";
 import sendEmail from "../utils/sendEmail.js";
 import { getResetPasswordTemplate } from "../utils/emailTemplates.js";
 import crypto from "crypto";
+import { upload_file } from "../utils/cloudinary.js";
 
 // inscription de User
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -196,5 +197,22 @@ export const deleteUser = catchAsyncErrors(async (req, res, next) => {
     await user.deleteOne();
     res.status(200).json({
         success: true,
+    });
+});
+//  upload user Avatar => /api/v1/me/upload_avatar
+
+export const uploadAvatar = catchAsyncErrors(async (req, res, next) => {
+    //  dans cloudinary on aura fichier Home/avatar  qui stock imgs
+    const avatarResponse = await upload_file(req.body.avatar, "Home/avatar");
+
+    //remove previous avatar
+    if (req?.avatar?.url) {
+        await delete_file(req?.user?.avatar?.public_id);
+    }
+    const user = await User.findByIdAndUpdate(req?.user._id, {
+        avatar: avatarResponse,
+    });
+    res.status(200).json({
+        user,
     });
 });

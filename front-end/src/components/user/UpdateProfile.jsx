@@ -13,7 +13,7 @@ const UpdateProfile = () => {
     const [email, setEmail] = useState("");
 
     const navigate = useNavigate();
-    const [UpdateProfile, { isLoading, error, isSucess }] =
+    const [UpdateProfile, { isLoading, error, isSuccess }] =
         useUpdateProfileMutation();
 
     useEffect(() => {
@@ -24,11 +24,11 @@ const UpdateProfile = () => {
         if (error) {
             toast.error(error?.data?.message);
         }
-        if (isSucess) {
+        if (isSuccess) {
             toast.success("User updated");
             navigate("/me/profile");
         }
-    }, [user, error, isSucess, navigate]);
+    }, [user, error, isSuccess, navigate]);
     const submitHandler = (e) => {
         e.preventDefault();
         const userData = { name, email };

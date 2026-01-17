@@ -8,6 +8,7 @@ export const userApi = createApi({
     reducerPath: "userApi",
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:4000/api/v1",
+
         credentials: "include", // ⚠️ IMPORTANT si cookies / JWT httpOnly
     }),
     //  cela nous permet d'enregistrer user dans local storage ,
@@ -43,7 +44,21 @@ export const userApi = createApi({
             },
             providesTags: ["User"],
         }),
+        uploadAvatar: builder.mutation({
+            query(body) {
+                return {
+                    url: "/me/upload_avatar",
+                    method: "PUT",
+                    body,
+                };
+            },
+        }),
+        providesTags: ["User"],
     }),
 });
 
-export const { useGetMeQuery, useUpdateProfileMutation } = userApi;
+export const {
+    useGetMeQuery,
+    useUpdateProfileMutation,
+    useUploadAvatarMutation,
+} = userApi;

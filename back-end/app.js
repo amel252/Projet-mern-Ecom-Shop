@@ -33,7 +33,7 @@ app.use("/api/v1", orderRoutes);
 // middleware de gestion d'erreur
 app.use(errorMiddleware);
 
-app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT, () => {
     console.log(
         `Le serveur est lancé sur le port: ${process.env.PORT} en mode :${process.env.NODE_ENV}`
     );
@@ -43,7 +43,7 @@ app.listen(process.env.PORT, () => {
 process.on("unhandledRejection", (err) => {
     console.log("ERROR:", err);
     console.log("Stack trace", err.stack);
-    Server.close(() => {
+    server.close(() => {
         process.exit(1);
     });
 });

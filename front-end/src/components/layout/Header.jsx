@@ -63,9 +63,13 @@ const Header = () => {
                         >
                             <figure className="avatar avatar-nav">
                                 <img
-                                    src="../images/default_avatar.jpg"
-                                    alt="User Avatar"
-                                    className="rounded-circle"
+                                    className="rounded-circle img-fluid"
+                                    src={
+                                        user?.avatar
+                                            ? user?.avatar.url
+                                            : "/images/default_avatar.jpg"
+                                    }
+                                    alt={user?.name}
                                 />
                             </figure>
                             <span>{user.name}</span>
