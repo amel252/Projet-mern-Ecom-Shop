@@ -29,6 +29,11 @@ export const userSlice = createSlice({
             state.isAuthenticated = false;
             state.loading = false;
         },
+        setCredentials(state, action) {
+            state.user = action.payload;
+            state.isAuthenticated = true;
+            state.loading = false;
+        },
     },
 });
 export default userSlice.reducer;
