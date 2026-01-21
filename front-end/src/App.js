@@ -16,7 +16,7 @@ import UploadAvatar from "./components/user/UploadAvatar";
 import UpdatePassword from "./components/user/UpdatePassword";
 import ForgotPassword from "./components/auth/ForgotPassword";
 import ResetPassword from "./components/auth/ResetPassword";
-
+import Cart from "./components/cart/Cart";
 function App() {
     return (
         <Router>
@@ -31,6 +31,7 @@ function App() {
                     {/*  routes authentificate */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/cart" element={<Cart />} />
                     <Route
                         path="/password/forgot"
                         element={<ForgotPassword />}

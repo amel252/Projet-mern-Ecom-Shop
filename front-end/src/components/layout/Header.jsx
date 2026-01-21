@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useLazyLogoutQuery } from "../../redux/api/authApi";
 import { logoutUser } from "../../redux/features/userSlice";
+import { setCartItem } from "../../redux/features/cartSlice";
 
 const Header = () => {
     const [logout] = useLazyLogoutQuery();
@@ -14,6 +15,7 @@ const Header = () => {
 
     const { user } = useSelector((state) => state.auth);
     console.log(user);
+    const { cartItems } = useSelector((state) => state.cart);
 
     const logoutHandler = async () => {
         try {
@@ -45,11 +47,10 @@ const Header = () => {
             <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
                 <Link to="/cart" style={{ textDecoration: "none" }}>
                     <span id="cart" className="ms-3">
-                        {" "}
-                        Cart{" "}
+                        Cart
                     </span>
                     <span className="ms-1" id="cart_count">
-                        0
+                        {cartItems?.length}
                     </span>
                 </Link>
                 {user ? (
