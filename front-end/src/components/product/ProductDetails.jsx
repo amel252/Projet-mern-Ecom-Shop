@@ -7,6 +7,8 @@ import renderStars from "../../utils/renderStars";
 import Loader from "../layout/Loader";
 
 const ProductDetails = () => {
+    const [quantity, setQuantity] = useState(1);
+
     const [activeImg, setActiveImg] = useState("");
     const params = useParams();
     const { data, isLoading, error, isError } = useGetProductDetailsQuery(
@@ -30,6 +32,24 @@ const ProductDetails = () => {
             toast.error(error?.data?.message || "Error is occured");
         }
     }, [isError]);
+    // fonction de quantity
+
+    const increaseQty = () => {
+        //  input count ciblé
+        const count = document.querySelector(".count");
+        //  si le produit est dispo dans le stock
+        if (count.valueAsNumber >= product.stock) return;
+        setQuantity(count.valueAsNumber + 1);
+    };
+    const decreaseQty = () => {
+        //  input count ciblé
+        const count = document.querySelector(".count");
+        //  si le produit est dispo dans le stock
+        if (count.valueAsNumber <= 1) return;
+
+        const qty = count.valueAsNumber - 1;
+        setQuantity(qty);
+    };
 
     if (isLoading) return <Loader />;
 
@@ -86,14 +106,24 @@ const ProductDetails = () => {
 
                     <p id="product_price">${product?.price}</p>
                     <div className="stockCounter d-inline">
-                        <span className="btn btn-danger minus">-</span>
+                        <span
+                            className="btn btn-danger minus"
+                            onClick={decreaseQty}
+                        >
+                            -
+                        </span>
                         <input
                             type="number"
                             className="form-control count d-inline"
-                            value="1"
+                            value={quantity}
                             readonly
                         />
-                        <span className="btn btn-primary plus">+</span>
+                        <span
+                            className="btn btn-primary plus"
+                            onClick={increaseQty}
+                        >
+                            +
+                        </span>
                     </div>
                     <button
                         type="button"
