@@ -20,7 +20,7 @@ const ForgotPassword = () => {
             toast.error(error?.data?.message);
         }
         if (isSuccess) {
-            toast.error("email sent .Please check your indox ");
+            toast.success("email sent .Please check your indox ");
         }
     }, [error, isAuthenticated, isSuccess, navigate]);
     const submitHandler = (e) => {

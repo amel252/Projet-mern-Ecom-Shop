@@ -19,7 +19,7 @@ import {
 import { authorizeRole, isAuthentificatedUser } from "../middleware/auth.js";
 
 // Mpd routes
-router.route("/forgot/password").post(forgotPassword);
+router.route("/password/forgot").post(forgotPassword);
 //  revoir postman avec cette function
 router.route("/password/reset/:token").put(resetPassword);
 

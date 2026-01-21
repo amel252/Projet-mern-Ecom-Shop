@@ -1,6 +1,5 @@
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import User from "../models/userModel.js";
-// import jwt from "jsonwebtoken";
 import ErrorHandler from "../utils/errorHandler.js";
 import sendToken from "../utils/sendToken.js";
 import sendEmail from "../utils/sendEmail.js";
@@ -34,7 +33,7 @@ export const forgotPassword = catchAsyncErrors(async (req, res, next) => {
     await user.save();
     // création de reset Password Url
     // const resetUrl = `${process.env.FRONTEND_URL}/api/v1/password/reset/${resetToken}`;
-    const resetUrl = `${process.env.FRONTEND_URL}password/reset/${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
     const message = getResetPasswordTemplate(user?.name, resetUrl);
     try {
         await sendEmail({
