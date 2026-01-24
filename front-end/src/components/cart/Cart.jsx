@@ -35,6 +35,9 @@ const Cart = () => {
     const removeCartItemHandler = (id) => {
         dispatch(removeCartItem(id));
     };
+    const checkOutHandler = () => {
+        navigate("/shipping");
+    };
 
     return (
         <>
@@ -45,7 +48,7 @@ const Cart = () => {
                 <>
                     <div className="container">
                         <h2 className="mt-5 mr-5">
-                            Your Cart: <b>{cartItems?.length} items</b>
+                            Your Cart contain : <b>{cartItems?.length} items</b>
                         </h2>
                         <div className="row d-flex justify-content-between">
                             <div className="col-12 col-lg-8">
@@ -135,21 +138,35 @@ const Cart = () => {
                                     <h4>Order Summary</h4>
                                     <hr />
                                     <p>
-                                        Subtotal:{" "}
+                                        Subtotal:
                                         <span className="order-summary-values">
-                                            8 (Units)
+                                            {cartItems?.reduce(
+                                                (acc, item) =>
+                                                    acc + item?.quantity,
+                                                0
+                                            )}
                                         </span>
                                     </p>
                                     <p>
-                                        Est. total:{" "}
+                                        Est. total:
                                         <span className="order-summary-values">
-                                            $1499.97
+                                            $
+                                            {cartItems
+                                                ?.reduce(
+                                                    (acc, item) =>
+                                                        acc +
+                                                        item?.quantity *
+                                                            item.price,
+                                                    0
+                                                )
+                                                .toFixed(2)}
                                         </span>
                                     </p>
                                     <hr />
                                     <button
                                         id="checkout_btn"
                                         className="btn btn-primary w-100"
+                                        onClick={checkOutHandler}
                                     >
                                         Check out
                                     </button>
