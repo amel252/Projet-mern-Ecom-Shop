@@ -57,6 +57,7 @@ const ProductDetails = () => {
     const setItemToCart = () => {
         const cartItem = {
             product: product?._id,
+            name: product?.name,
             price: product?.price,
             image: product?.images[0]?.url,
             stock: product?.stock,
@@ -69,7 +70,7 @@ const ProductDetails = () => {
 
     return (
         <>
-            <MetaData title={product.name} />
+            <MetaData title={product?.name || "Product details"} />
             <div className="row d-flex justify-content-around">
                 <div className="col-12 col-lg-5 img-fluid" id="product_image">
                     <div className="p-3">
@@ -130,7 +131,7 @@ const ProductDetails = () => {
                             type="number"
                             className="form-control count d-inline"
                             value={quantity}
-                            readonly
+                            readOnly
                         />
                         <span
                             className="btn btn-primary plus"
