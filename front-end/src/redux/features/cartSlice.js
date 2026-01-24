@@ -32,7 +32,14 @@ export const cartSlice = createSlice({
             //  mettre a jour notre panier
             localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
         },
+        removeCartItem: (state, action) => {
+            //  on filtre et o, récupere l'element filtré pour comparé avec celui envoyé
+            state.cartItems = state?.cartItems?.filter(
+                (i) => i.product !== action.payload
+            );
+            localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+        },
     },
 });
 export default cartSlice.reducer;
-export const { setCartItem } = cartSlice.actions;
+export const { setCartItem, removeCartItem } = cartSlice.actions;
