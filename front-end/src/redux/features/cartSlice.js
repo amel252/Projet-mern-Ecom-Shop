@@ -40,7 +40,7 @@ export const cartSlice = createSlice({
             localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
         },
         saveShippingInfo: (state, action) => {
-            state.saveShippingInfo = action.payload;
+            state.shippingInfo = action.payload;
             localStorage.setItem(
                 "shippingInfo",
                 JSON.stringify(state.shippingInfo)
