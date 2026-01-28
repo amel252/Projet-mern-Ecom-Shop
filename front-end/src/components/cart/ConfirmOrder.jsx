@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import MetaData from "../layout/MetaData";
 import { useSelector } from "react-redux";
 import { caculateOrderCost } from "../../helpers/helpers";
+import CheckoutSteps from "./CheckoutSteps";
 
 function ConfirmOrder() {
     const { cartItems, shippingInfo } = useSelector((state) => state.cart);
@@ -15,6 +16,7 @@ function ConfirmOrder() {
     return (
         <>
             <MetaData title={"Confirm Order Info"} />
+            <CheckoutSteps shipping confirmOrder />
 
             <div className="container">
                 <div className="row d-flex justify-content-between">
@@ -86,7 +88,7 @@ function ConfirmOrder() {
                             <p>
                                 Subtotal:{" "}
                                 <span className="order-summary-values">
-                                    ${itemsPrice}
+                                    ${itemsPrice} (units)
                                 </span>
                             </p>
                             <p>

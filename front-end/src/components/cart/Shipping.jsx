@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import MetaData from "../layout/MetaData";
 import { useSelector, useDispatch } from "react-redux";
 import { getNames } from "country-list";
+import CheckoutSteps from "./CheckoutSteps";
 
 function Shipping() {
     const dispatch = useDispatch();
@@ -40,6 +41,7 @@ function Shipping() {
     return (
         <>
             <MetaData title={"Shipping Info"} />
+            <CheckoutSteps shipping />
             <div className="row wrapper mb-5">
                 <div className="col-10 col-lg-5">
                     <form

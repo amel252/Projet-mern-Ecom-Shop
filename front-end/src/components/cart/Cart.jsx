@@ -144,7 +144,8 @@ const Cart = () => {
                                                 (acc, item) =>
                                                     acc + item?.quantity,
                                                 0
-                                            )}
+                                            )}{" "}
+                                            (units)
                                         </span>
                                     </p>
                                     <p>
