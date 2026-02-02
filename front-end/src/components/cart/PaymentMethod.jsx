@@ -5,7 +5,10 @@ import { useSelector } from "react-redux";
 import { calculateOrderCost } from "../../helpers/helpers";
 import { toast } from "react-hot-toast";
 import CheckoutSteps from "./CheckoutSteps";
-import { useCreateNewOrderMutation } from "../../redux/api/orderApi";
+import {
+    useCreateNewOrderMutation,
+    useStripeCheckoutSessionMutation,
+} from "../../redux/api/orderApi";
 
 const PaymentMethod = () => {
     const [method, setMethod] = useState("");
@@ -13,8 +16,21 @@ const PaymentMethod = () => {
     const { shippingInfo, cartItems } = useSelector((state) => state.cart);
     //  fait appel a la fonction , stocké dans createNewOrder
     const [createNewOrder, { error, isSuccess }] = useCreateNewOrderMutation();
+    const [
+        stripeCheckoutSession,
+        { data: checkoutData, error: checkoutError, isLoading },
+    ] = useStripeCheckoutSessionMutation();
+
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (checkoutData) {
+            window.location.href = checkoutData?.url;
+        }
+        if (checkoutError) {
+            toast.error(checkoutError?.message);
+        }
+    }, [checkoutData, checkoutError]);
     useEffect(() => {
         if (error) {
             toast.error(error?.data?.message);
@@ -67,7 +83,15 @@ const PaymentMethod = () => {
         }
         if (method === "Card") {
             //  stripe Checkout
-            alert("card");
+            const orderData = {
+                shippingInfo,
+                orderItems: cartItems,
+                itemsPrice,
+                shippingAmount: shippingPrice,
+                taxAmount: taxPrice,
+                totalAmount: totalPrice,
+            };
+            stripeCheckoutSession(orderData);
         }
     };
 
@@ -120,6 +144,7 @@ const PaymentMethod = () => {
                             id="shipping_btn"
                             type="submit"
                             className="btn py-2 w-100"
+                            disabled={isLoading}
                         >
                             CONTINUE
                         </button>
