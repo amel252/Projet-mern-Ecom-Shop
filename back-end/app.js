@@ -12,11 +12,18 @@ import errorMiddleware from "./middleware/error.js";
 // import { log } from "console";
 import cookieParser from "cookie-parser";
 import paymentRoutes from "./routes/paymentRoute.js";
+import bodyParser from "body-parser";
 
 const app = express();
 
 connectedDatabase();
 
+app.use(
+    "/api/v1/payment/webhook",
+    bodyParser.raw({ type: "application/json" })
+);
+app.use(express.json());
+app.use(cookieParser());
 // ✅ CORS DOIT ÊTRE AVANT LES ROUTES
 app.use(
     cors({
@@ -24,9 +31,6 @@ app.use(
         credentials: true,
     })
 );
-
-app.use(express.json());
-app.use(cookieParser());
 
 app.use("/api/v1", productRoutes);
 app.use("/api/v1", authRoutes);

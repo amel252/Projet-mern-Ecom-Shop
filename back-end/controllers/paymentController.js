@@ -9,6 +9,7 @@ dotenv.config({ path: path.resolve("./backend/config/config.env") });
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// 1ere fonction de paiement
 export const stripeCheckoutSession = catchAsyncErrors(
     async (req, res, next) => {
         const {
@@ -25,7 +26,7 @@ export const stripeCheckoutSession = catchAsyncErrors(
             return res.status(400).json({ message: "No order items" });
         }
 
-        // 1️⃣ Créer la commande AVANT Stripe
+        // Créer la commande AVANT Stripe
         const order = await Order.create({
             user: req.user._id,
             orderItems,
@@ -46,7 +47,7 @@ export const stripeCheckoutSession = catchAsyncErrors(
             paymentStatus: "pending",
         });
 
-        // 2️⃣ Line items Stripe
+        // Line items Stripe
         const line_items = orderItems.map((item) => ({
             price_data: {
                 currency: "usd",
@@ -59,7 +60,7 @@ export const stripeCheckoutSession = catchAsyncErrors(
             quantity: item.quantity,
         }));
 
-        // 3️⃣ Session Stripe
+        // Session Stripe
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
@@ -79,3 +80,60 @@ export const stripeCheckoutSession = catchAsyncErrors(
         res.status(200).json({ url: session.url });
     }
 );
+//  fonction qui vérifie la requette de stripe de paiement pour valider le paiement on enregistre en BDD
+export const stripeWebhookHandler = async (req, res) => {
+    const sig = req.headers["stripe-signature"];
+    //  la variable contenant l'évenement
+    let event;
+    //  verification de la signature (requette)
+    try {
+        event = stripe.webhooks.constructEvent(
+            //  on verifie le body(les données)  , sig, et le webhookSecret
+            req.body,
+            sig,
+            process.env.STRIPE_WEBHOOK_SECRET
+        );
+    } catch (error) {
+        //  si ca marche pas , sig pas valide
+        console.error("Webhook signature error:", error.message);
+        return res.status(400).send(`Webhook Error: ${error.message}`);
+    }
+    // traitement de l'evenement est reussi lors du paiement
+    if (event.type === "checkout.session.completed") {
+        // donnée de la session stripeà la fin du paiement
+        const session = event.data.object;
+        //  récup de l'id de la commande en metadata
+        const orderId = session.metadata.orderId;
+        //  vérif l'id si existe pas
+        if (!orderId) {
+            console.error("orderId manquant dans metadata");
+            return res.status(400).send("orderId missing");
+        }
+        //  si existe on récupére la commande en BD a partir de l'id
+        const order = await Order.findById(orderId);
+        //  si la commande n'existe pas envoie msg
+        if (!order) {
+            console.error("Commande introuvable:", orderId);
+            return res.status(404).send("Order not found");
+        }
+
+        //  Sécurité de pas envoyé le meme evenement plusieurs fois (double webhook)
+        if (order.paymentStatus === "paid") {
+            return res.status(200).json({ received: true });
+        }
+        // commande payé , on met la date exacte
+        order.paymentStatus = "paid";
+        order.paidAt = Date.now();
+        //  sauvegarder les infos du paiement
+        order.paymentInfo = {
+            // id du  paiement stripe
+            id: session.payment_intent,
+            //     status du paiement
+            status: session.payment_status,
+        };
+        //sauvegarde en BD
+        await order.save();
+    }
+    //  envoie la réponse
+    res.status(200).json({ received: true });
+};
