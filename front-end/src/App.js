@@ -20,6 +20,7 @@ import Cart from "./components/cart/Cart";
 import Shipping from "./components/cart/Shipping";
 import ConfirmOrder from "./components/cart/ConfirmOrder";
 import PaymentMethod from "./components/cart/PaymentMethod";
+import MyOrders from "./components/order/MyOrders";
 function App() {
     return (
         <Router>
@@ -98,6 +99,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <PaymentMethod />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/me/orders"
+                        element={
+                            <ProtectedRoute>
+                                <MyOrders />
                             </ProtectedRoute>
                         }
                     />
