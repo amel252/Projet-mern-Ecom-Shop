@@ -42,7 +42,7 @@ function MyOrders() {
                         </Link>
                         <Link
                             to={`/invoice/${order?._id}`}
-                            className="btn btn-succes ms-2 btn-sm"
+                            className="btn btn-success ms-2 btn-sm"
                         >
                             <i className="fa fa-print"></i>
                         </Link>
