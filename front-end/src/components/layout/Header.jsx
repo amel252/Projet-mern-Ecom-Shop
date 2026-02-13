@@ -14,7 +14,7 @@ const Header = () => {
     const dispatch = useDispatch();
 
     const { user } = useSelector((state) => state.auth);
-    console.log(user);
+    // console.log(user);
     const { cartItems } = useSelector((state) => state.cart);
 
     const logoutHandler = async () => {

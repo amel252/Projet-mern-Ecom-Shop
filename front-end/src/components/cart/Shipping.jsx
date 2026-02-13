@@ -35,7 +35,6 @@ function Shipping() {
         dispatch(
             saveShippingInfo({ address, city, phoneNo, zipCode, country })
         );
-        dispatch(saveShippingInfo);
         navigate("/confirm_order");
     };
     return (
