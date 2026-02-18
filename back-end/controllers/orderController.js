@@ -39,6 +39,7 @@ export const getOrderDetails = catchAsyncErrors(async (req, res, next) => {
         "user",
         "name email"
     );
+
     if (!order) {
         return next(new ErrorHandler("Order not found with this ID", 404));
     }

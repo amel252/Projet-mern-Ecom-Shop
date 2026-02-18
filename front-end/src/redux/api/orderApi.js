@@ -8,6 +8,15 @@ export const orderApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: "/api/v1",
     }),
+    prepareHeaders: (headers, { getState }) => {
+        const token = getState().auth?.user?.token;
+        console.log("User token in prepareHeaders:", token);
+        if (token) {
+            headers.set("Authorization", `Bearer ${token}`);
+        }
+        return headers;
+    },
+
     endpoints: (builder) => ({
         createNewOrder: builder.mutation({
             query(body) {

@@ -23,11 +23,12 @@ import PaymentMethod from "./components/cart/PaymentMethod";
 import MyOrders from "./components/order/MyOrders";
 import OrderDetails from "./components/order/OrderDetails";
 import PaymentSuccess from "./components/cart/PaymentSuccess";
+import Invoice from "./components/invoice/Invoice";
 function App() {
     return (
         <Router>
             <div className="App">
-                <Toaster />
+                <Toaster position="top-center" />
                 {/* la position par default est a droite en haut  */}
                 <Header position="top-center" />
                 <Routes>
@@ -133,6 +134,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <OrderDetails />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/invoice/order/:id"
+                        element={
+                            <ProtectedRoute>
+                                <Invoice />
                             </ProtectedRoute>
                         }
                     />
