@@ -5,16 +5,17 @@ export const productApi = createApi({
     //  on réécri ce que on a mis dans const
     reducerPath: "productApi",
     baseQuery: fetchBaseQuery({
-        // baseUrl: "http://localhost:4000/api/v1",
-        baseUrl: "/api/v1",
+        baseUrl: "http://localhost:4000/api/v1",
+        credentials: "include",
+        // baseUrl: "/api/v1",
         // envoyé  le token de l'utilisateur
-        prepareHeaders: (headers, { getState }) => {
-            const token = getState().auth?.user?.token;
-            if (token) headers.set("Authorization", `Bearer${token}`);
-            return headers;
-        },
+        // prepareHeaders: (headers, { getState }) => {
+        //     const token = getState().auth?.user?.token;
+        //     if (token) headers.set("Authorization", `Bearer${token}`);
+        //     return headers;
+        // },
     }),
-    tagTypes: ["Product"],
+    // tagTypes: ["Product"],
 
     endpoints: (builder) => ({
         getProducts: builder.query({
@@ -37,10 +38,20 @@ export const productApi = createApi({
                 { type: "Product", id: productId },
             ],
         }),
+        submitReview: builder.mutation({
+            query(body) {
+                return {
+                    url: "/reviews",
+                    method: "PUT",
+                    body,
+                };
+            },
+        }),
     }),
 });
 export const {
     useGetProductsQuery,
     useGetProductDetailsQuery,
     useCreateReviewMutation,
+    useSubmitReviewMutation,
 } = productApi;
