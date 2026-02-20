@@ -28,6 +28,9 @@ export const productApi = createApi({
         getProductDetails: builder.query({
             query: (id) => `/products/${id}`,
         }),
+        //  tu cible le produit
+        invalidateTags: ["product"],
+
         createReview: builder.mutation({
             query: ({ productId, rating, comment }) => ({
                 url: `/products/${productId}/reviews`,

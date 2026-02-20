@@ -67,7 +67,9 @@ export const getProducts = catchAsyncErrors(async (req, res, next) => {
 
 // obtenir le details d'un produit
 export const getProductDetails = catchAsyncErrors(async (req, res, next) => {
-    const product = await Product.findById(req?.params.id);
+    const product = await Product.findById(req?.params.id).populate(
+        "reviews.user"
+    );
 
     if (!product) return next(new ErrorHandler("Produit non trouvé", 404));
 
