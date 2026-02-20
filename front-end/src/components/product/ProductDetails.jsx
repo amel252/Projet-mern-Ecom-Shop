@@ -10,7 +10,7 @@ import { setCartItem } from "../../redux/features/cartSlice";
 import NewReview from "../reviews/NewReview";
 import ListReview from "../reviews/ListReview";
 
-const ProductDetails = ({ reviews }) => {
+const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1);
 
     const [activeImg, setActiveImg] = useState("");
@@ -38,7 +38,7 @@ const ProductDetails = ({ reviews }) => {
         if (isError) {
             toast.error(error?.data?.message || "Error is occured");
         }
-    }, [isError]);
+    }, [isError, error]);
     // fonction de quantity
 
     const increaseQty = () => {
@@ -68,10 +68,10 @@ const ProductDetails = ({ reviews }) => {
             quantity,
         };
         dispatch(setCartItem(cartItem));
-        toast.success("product add successifuly");
+        toast.success("Produit ajouté au panier");
     };
     if (isLoading) return <Loader />;
-
+    if (!product) return null;
     return (
         <>
             <MetaData title={product?.name || "Product details"} />
@@ -89,10 +89,9 @@ const ProductDetails = ({ reviews }) => {
                     </div>
                     <div className="row justify-content-start mt-5">
                         {product?.images?.map((img) => (
-                            <div className="col-2 ms-4 mt-2">
+                            <div key={img._id} className="col-2 ms-4 mt-2">
                                 <a role="button">
                                     <img
-                                        key={img._id}
                                         className={`d-block border rounded p-3 cursor-pointer ${
                                             img.url === activeImg
                                                 ? "border-warning"

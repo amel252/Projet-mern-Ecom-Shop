@@ -49,6 +49,10 @@ export const productApi = createApi({
                     body,
                 };
             },
+            invalidateTags: ["product"],
+        }),
+        canUserReview: builder.query({
+            query: (productId) => `/can_review/?productId=${productId}`,
         }),
     }),
 });
@@ -57,4 +61,5 @@ export const {
     useGetProductDetailsQuery,
     useCreateReviewMutation,
     useSubmitReviewMutation,
+    useCanUserReviewQuery,
 } = productApi;

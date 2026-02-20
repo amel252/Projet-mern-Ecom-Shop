@@ -1,95 +1,9 @@
-// import React, { useState } from "react";
-// import renderStars from "../../utils/renderStars";
-// import { useSubmitReviewMutation } from "../../redux/api/productsApi";
-
-// const NewReview = () => {
-//     const [rating, setRating] = useState(0);
-//     const [comment, setComment] = useState(0);
-//     const [submitReview, { isLoading, error, isSuccess }] =
-//         useSubmitReviewMutation();
-//     useEffect(() => {
-//         if (error) {
-//             Toast.error(error?.data?.message);
-//         }
-//         if (isSuccess) {
-//             Toast.success("Review posted");
-//         }
-//     }, [error, isSuccess]);
-
-//     const submitHandler = () => {
-//         const reviewData = { rating, comment, productId };
-//         submitReview();
-//     };
-//     return (
-//         <div>
-//             <button
-//                 id="review_btn"
-//                 type="button"
-//                 className="btn btn-primary mt-4"
-//                 data-bs-toggle="modal"
-//                 data-bs-target="#ratingModal"
-//             >
-//                 Submit Your Review
-//             </button>
-
-//             <div className="row mt-2 mb-5">
-//                 <div className="rating w-50">
-//                     <div
-//                         className="modal fade"
-//                         id="ratingModal"
-//                         tabindex="-1"
-//                         role="dialog"
-//                         aria-labelledby="ratingModalLabel"
-//                         aria-hidden="true"
-//                     >
-//                         <div className="modal-dialog" role="document">
-//                             <div className="modal-content">
-//                                 <div className="modal-header">
-//                                     <h5
-//                                         className="modal-title"
-//                                         id="ratingModalLabel"
-//                                     >
-//                                         Submit Review
-//                                     </h5>
-//                                     <button
-//                                         type="button"
-//                                         className="btn-close"
-//                                         data-bs-dismiss="modal"
-//                                         aria-label="Close"
-//                                     ></button>
-//                                 </div>
-//                                 <div className="modal-body">
-//                                     <renderStars />
-
-//                                     <textarea
-//                                         name="review"
-//                                         id="review"
-//                                         className="form-control mt-4"
-//                                         placeholder="Enter your comment"
-//                                     ></textarea>
-
-//                                     <button
-//                                         id="new_review_btn"
-//                                         className="btn w-100 my-4 px-4"
-//                                         data-bs-dismiss="modal"
-//                                         aria-label="Close"
-//                                     >
-//                                         Submit
-//                                     </button>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default NewReview;
 import React, { useState, useEffect } from "react";
 import renderStars from "../../utils/renderStars";
-import { useSubmitReviewMutation } from "../../redux/api/productsApi";
+import {
+    useSubmitReviewMutation,
+    useCanUserReviewQuery,
+} from "../../redux/api/productsApi";
 import { toast } from "react-hot-toast";
 
 const NewReview = ({ productId }) => {
@@ -98,6 +12,10 @@ const NewReview = ({ productId }) => {
 
     const [submitReview, { isLoading, error, isSuccess }] =
         useSubmitReviewMutation();
+
+    const { data } = useCanUserReviewQuery(productId);
+    const canReview = data?.canReview;
+
     useEffect(() => {
         if (error) {
             toast.error(error?.data?.message);
@@ -113,16 +31,17 @@ const NewReview = ({ productId }) => {
     };
     return (
         <div>
-            <button
-                id="review_btn"
-                type="button"
-                className="btn btn-primary mt-4"
-                data-bs-toggle="modal"
-                data-bs-target="#ratingModal"
-            >
-                Submit Your Review
-            </button>
-
+            {canReview && (
+                <button
+                    id="review_btn"
+                    type="button"
+                    className="btn btn-primary mt-4"
+                    data-bs-toggle="modal"
+                    data-bs-target="#ratingModal"
+                >
+                    Submit Your Review
+                </button>
+            )}
             <div className="row mt-2 mb-5">
                 <div className="rating w-50">
                     <div

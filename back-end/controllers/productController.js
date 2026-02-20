@@ -2,6 +2,7 @@ import Product from "../models/productModel.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import APIFilters from "../utils/apiFilter.js";
+import Order from "../models/orderModel.js";
 
 // create new product => /api/v1/admin/products
 export const newProduct = catchAsyncErrors(async (req, res) => {
@@ -189,5 +190,31 @@ export const deleteReview = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         product,
+    });
+});
+// export const canUserReview = catchAsyncErrors(async (req, res, next) => {
+//     const orders = await Order.find({
+//         user: req.user._id,
+//         "orderItems.product": req.query.productId,
+//     });
+//     if (orders.length === 0) {
+//         return res.status(200).json({ canUserReview: false });
+//     }
+//     res.status(200).json({
+//         canReview: true,
+//     });
+// });
+export const canUserReview = catchAsyncErrors(async (req, res, next) => {
+    const orders = await Order.find({
+        user: req.user._id, //id the user qui a passé la commande
+        "orderItems.product": req.query.productId, //orderItems contient productId the user qui a acheté ce product
+    });
+
+    if (orders.length === 0) {
+        return res.status(200).json({ canReview: false });
+    }
+
+    res.status(200).json({
+        canReview: true,
     });
 });

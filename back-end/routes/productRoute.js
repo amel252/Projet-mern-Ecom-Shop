@@ -8,6 +8,7 @@ import {
     updateProduct,
     getProductReviews,
     deleteReview,
+    canUserReview,
 } from "../controllers/productController.js";
 import { isAuthentificatedUser, authorizeRole } from "../middleware/auth.js";
 
@@ -32,5 +33,5 @@ router
 router
     .route("/admin/reviews")
     .delete(isAuthentificatedUser, authorizeRole("admin"), deleteReview);
-
+router.route("/can_review").get(isAuthentificatedUser, canUserReview);
 export default router;
