@@ -28,13 +28,21 @@ body {
 
 nav {
     background-color: #232f3e;
-    padding: 1rem 1rem;
+    padding: 0.4rem 1rem;
 }
 
 .navbar {
     padding: 0.1rem 1rem;
+    align-items: center;
 }
 
+/* rajout */
+/* Logo navbar */
+.navbar-brand img {
+    max-width: 140px;
+    height: auto;
+    display: block;
+}
 .dropdown {
     position: relative;
     display: inline-block;
@@ -573,4 +581,71 @@ a {
 /* remove the scrollbar(google chrome) */
 html::-webkit-scrollbar {
     display: none;
+}
+
+/*  responsive */
+@media (max-width: 768px) {
+    nav {
+        padding: 0.3rem 0.5rem;
+    }
+    .navbar-brand img {
+        max-width: 110px;
+    }
+
+    .product-image {
+        width: 100%;
+        height: auto;
+    }
+    .product-card {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+/* Product Cards */
+.product-card {
+    border-radius: 10px;
+    padding: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-img {
+    width: 100%;
+    max-height: 180px; /* limite la hauteur */
+    object-fit: contain;
+    margin-bottom: 0.5rem;
+}
+
+/* Responsive Cards */
+@media (max-width: 992px) {
+    /* Tablette */
+    .col-md-4,
+    .col-lg-4,
+    .col-lg-3 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Mobile */
+    .col-6,
+    .col-sm-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding: 0.5rem;
+    }
+
+    .product-img {
+        max-height: 150px;
+    }
+
+    #view_btn {
+        width: 100%;
+        padding: 0.4rem 0;
+        font-size: 0.85rem;
+    }
 }

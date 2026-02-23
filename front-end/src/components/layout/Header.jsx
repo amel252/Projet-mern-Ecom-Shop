@@ -30,13 +30,15 @@ const Header = () => {
     };
 
     return (
-        <nav className="navbar row">
+        <nav className="navbar row navbar-expand-lg py-2">
             <div className="col-12 col-md-3 ps-5">
                 <div className="navbar-brand">
                     <Link to="/">
                         <img
                             src="../images/shopit_logo.png"
                             alt="ShopIT Logo"
+                            className="img-fluid"
+                            style={{ maxWidth: "140px", height: "auto" }}
                         />
                     </Link>
                 </div>
@@ -79,22 +81,21 @@ const Header = () => {
                             className="dropdown-menu w-100"
                             aria-labelledby="dropDownMenuButton"
                         >
-                            <Link
-                                className="dropdown-item"
-                                to="/admin/dashboard"
-                            >
-                                {" "}
-                                Dashboard{" "}
-                            </Link>
+                            {user?.role === "admin" && (
+                                <Link
+                                    className="dropdown-item"
+                                    to="/admin/dashboard"
+                                >
+                                    Dashboard
+                                </Link>
+                            )}
 
                             <Link className="dropdown-item" to="/me/orders">
-                                {" "}
-                                Orders{" "}
+                                Orders
                             </Link>
 
                             <Link className="dropdown-item" to="/me/profile">
-                                {" "}
-                                Profile{" "}
+                                Profile
                             </Link>
 
                             <Link
@@ -108,8 +109,7 @@ const Header = () => {
                     </div>
                 ) : (
                     <Link to="/login" className="btn ms-4" id="login_btn">
-                        {" "}
-                        Login{" "}
+                        Login
                     </Link>
                 )}
             </div>
