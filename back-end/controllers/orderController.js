@@ -104,38 +104,6 @@ export const updateOrder = catchAsyncErrors(async (req, res, next) => {
         success: true,
     });
 });
-
-// export const updateOrder = catchAsyncErrors(async (req, res, next) => {
-//     const order = await Order.findById(req.params.id);
-//     //  si order n'existe pas
-//     if (!order) {
-//         return next(new ErrorHandler("No order found with this ID ", 404));
-//     }
-//     //  si order est déja livré
-//     if (order?.orderStatus === "Delivered") {
-//         return next(
-//             new ErrorHandler("You have already delivred this order", 400)
-//         );
-//     }
-//     //  mise à jour du stock update products , parcourir chaque item
-//     order?.orderItems?.forEach(async (item) => {
-//         const product = await Product.findById(item?.product?.toString());
-//         //  si produit est supprimé ou existe pas
-//         if (!product) {
-//             return next(new ErrorHandler("No product found with this ID", 404));
-//         }
-//         //  quand on modifie la commande , on diminue le stock selon la quantité commandé
-//         product.stock = product.stock - item.quantity;
-//         await product.save({ validateBeforeSave: false });
-//     });
-//     order.orderStatus = req.body.status;
-//     order.deliveredAt = Date.now();
-//     await order.save();
-//     res.status(200).json({
-//         success: true,
-//     });
-// });
-
 // Delete order-Admin /api.v1/admin/orders/:id
 export const deleteOrder = catchAsyncErrors(async (req, res, next) => {
     const order = await Order.findById(req.params.id);
@@ -150,5 +118,88 @@ export const deleteOrder = catchAsyncErrors(async (req, res, next) => {
 
     res.status(200).json({
         success: true,
+    });
+});
+//  ------- sales et orders----
+function getDateBetween(startDate, endDate) {
+    const dates = [];
+    let currentDate = new Date(startDate);
+    //  tant que la date actuelle est inf et egal a la endDate , tu formate
+    while (currentDate <= new Date(endDate)) {
+        const formatedDate = currentDate.toISOString().split("T")[0];
+        dates.push(formatedDate);
+        //  faut inclementer pour ne pas avoir boucle infini
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dates;
+}
+//  ------- function qui fait la requette en BD  =>/api/v1/admin/get_sales
+async function getSalesDate(startDate, endDate) {
+    const salesDate = await Order.aggregate([
+        {
+            //  filtrer les resultats
+            $match: {
+                createdAt: {
+                    $gte: new Date(startDate),
+                    $lte: new Date(endDate),
+                },
+            },
+        },
+        {
+            //  grouper la data
+            $group: {
+                _id: {
+                    date: {
+                        $dateToString: {
+                            format: "%Y-%m-%d",
+                            date: "$createdAt",
+                        },
+                    },
+                },
+                totaSales: { $sum: 1 },
+                numOrder: { $sum: 1 },
+            },
+        },
+        {
+            //  trier par date
+            $sort: { "_id.date": 1 },
+        },
+    ]);
+    return salesDate;
+}
+//  recup ventes
+export const getSales = catchAsyncErrors(async (req, res, next) => {
+    const startDate = new Date(req.query.startDate);
+    const endDate = new Date(req.query.endDate);
+    //  definir les horaires de la journée exacte
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+    //  récup les ventes depuis MongoDb
+    const salesDate = await getSalesDate(startDate, endDate);
+    //  les dates entre la date du début et de la fin
+    const allDates = getDateBetween(startDate, endDate);
+
+    //  completer les dates manquantes
+    const finalSalesDate = allDates.map((date) => {
+        //  on compare ce qu'on a dans mongodb
+        const found = salesDate.find((s) => s._id === date);
+        //  si la date existe on lui passe la date , totalSales, numOrder
+        return found ? found : { _id: { date }, totaSales: 0, numOrder: 0 };
+    });
+    //  totalisation la moyenne de nos sales et orders
+    const totalSales = finalSalesDate.reduce(
+        (acc, cur) => acc + cur.totaSales,
+        0
+    );
+    const totalOrders = finalSalesDate.reduce(
+        (acc, cur) => acc + cur.numOrder,
+        0
+    );
+
+    res.status(200).json({
+        success: true,
+        salesDate: finalSalesDate,
+        totalSales,
+        totalOrders,
     });
 });
