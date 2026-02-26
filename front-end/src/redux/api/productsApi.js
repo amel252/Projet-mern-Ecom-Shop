@@ -7,15 +7,9 @@ export const productApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:4000/api/v1",
         credentials: "include",
-        // baseUrl: "/api/v1",
-        // envoyé  le token de l'utilisateur
-        // prepareHeaders: (headers, { getState }) => {
-        //     const token = getState().auth?.user?.token;
-        //     if (token) headers.set("Authorization", `Bearer${token}`);
-        //     return headers;
-        // },
     }),
-    // tagTypes: ["Product"],
+    //  pour rafrechir la page apres chaque modif
+    tagTypes: ["Product", "AdminProducts"],
 
     endpoints: (builder) => ({
         getProducts: builder.query({
@@ -57,6 +51,16 @@ export const productApi = createApi({
         getAdminProducts: builder.query({
             query: () => `/admin/products`,
         }),
+        createProduct: builder.mutation({
+            query(body) {
+                return {
+                    url: "/admin/products",
+                    method: "POST",
+                    body,
+                };
+            },
+            invalidateTags: ["AdminProducts"],
+        }),
     }),
 });
 export const {
@@ -66,4 +70,5 @@ export const {
     useSubmitReviewMutation,
     useCanUserReviewQuery,
     useGetAdminProductsQuery,
+    useCreateProductMutation,
 } = productApi;

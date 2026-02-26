@@ -3,6 +3,7 @@ import ProtectedRoute from "../auth/ProtectedRoute";
 import Dashboard from "../admin/Dashboard";
 import { Route } from "react-router-dom";
 import ListProducts from "../admin/ListProducts";
+import NewProduct from "../admin/NewProduct";
 
 const AdminRoute = () => {
     return (
@@ -20,6 +21,14 @@ const AdminRoute = () => {
                 element={
                     <ProtectedRoute admin={true}>
                         <ListProducts />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/admin/product/new"
+                element={
+                    <ProtectedRoute admin={true}>
+                        <NewProduct />
                     </ProtectedRoute>
                 }
             />
