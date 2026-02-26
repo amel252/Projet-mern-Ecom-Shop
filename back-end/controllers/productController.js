@@ -192,18 +192,7 @@ export const deleteReview = catchAsyncErrors(async (req, res, next) => {
         product,
     });
 });
-// export const canUserReview = catchAsyncErrors(async (req, res, next) => {
-//     const orders = await Order.find({
-//         user: req.user._id,
-//         "orderItems.product": req.query.productId,
-//     });
-//     if (orders.length === 0) {
-//         return res.status(200).json({ canUserReview: false });
-//     }
-//     res.status(200).json({
-//         canReview: true,
-//     });
-// });
+
 export const canUserReview = catchAsyncErrors(async (req, res, next) => {
     const orders = await Order.find({
         user: req.user._id, //id the user qui a passé la commande
@@ -216,5 +205,14 @@ export const canUserReview = catchAsyncErrors(async (req, res, next) => {
 
     res.status(200).json({
         canReview: true,
+    });
+});
+//  get products Admin => /api/v1/admin/products
+
+export const getAdminProducts = catchAsyncErrors(async (req, res, next) => {
+    const products = await Product.find();
+
+    res.status(200).json({
+        products,
     });
 });
