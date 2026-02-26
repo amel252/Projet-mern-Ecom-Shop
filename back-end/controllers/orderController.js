@@ -135,7 +135,7 @@ function getDateBetween(startDate, endDate) {
 }
 //  ------- function qui fait la requette en BD  =>/api/v1/admin/get_sales
 async function getSalesDate(startDate, endDate) {
-    const salesDate = await Order.aggregate([
+    const salesData = await Order.aggregate([
         {
             //  filtrer les resultats
             $match: {
@@ -156,7 +156,7 @@ async function getSalesDate(startDate, endDate) {
                         },
                     },
                 },
-                totaSales: { $sum: 1 },
+                totalSales: { $sum: "$totalAmount" },
                 numOrder: { $sum: 1 },
             },
         },
@@ -165,30 +165,33 @@ async function getSalesDate(startDate, endDate) {
             $sort: { "_id.date": 1 },
         },
     ]);
-    return salesDate;
+    return salesData;
 }
 //  recup ventes
 export const getSales = catchAsyncErrors(async (req, res, next) => {
     const startDate = new Date(req.query.startDate);
     const endDate = new Date(req.query.endDate);
+
     //  definir les horaires de la journée exacte
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(23, 59, 59, 999);
+
     //  récup les ventes depuis MongoDb
     const salesDate = await getSalesDate(startDate, endDate);
+
     //  les dates entre la date du début et de la fin
     const allDates = getDateBetween(startDate, endDate);
 
     //  completer les dates manquantes
     const finalSalesDate = allDates.map((date) => {
         //  on compare ce qu'on a dans mongodb
-        const found = salesDate.find((s) => s._id === date);
+        const found = salesDate.find((s) => s._id.date === date);
         //  si la date existe on lui passe la date , totalSales, numOrder
-        return found ? found : { _id: { date }, totaSales: 0, numOrder: 0 };
+        return found ? found : { _id: { date }, totalSales: 0, numOrder: 0 };
     });
     //  totalisation la moyenne de nos sales et orders
     const totalSales = finalSalesDate.reduce(
-        (acc, cur) => acc + cur.totaSales,
+        (acc, cur) => acc + cur.totalSales,
         0
     );
     const totalOrders = finalSalesDate.reduce(

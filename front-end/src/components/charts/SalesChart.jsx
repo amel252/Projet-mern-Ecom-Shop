@@ -1,3 +1,4 @@
+import React from "react";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -20,58 +21,53 @@ ChartJS.register(
     Legend
 );
 
-export const options = {
-    responsive: true,
-    interaction: {
-        mode: "index",
-        intersect: false,
-    },
-    stacked: false,
-    plugins: {
-        title: {
-            display: true,
-            text: "Sales & Orders Data",
-        },
-    },
-    scales: {
-        y: {
-            type: "linear",
-            display: true,
-            position: "left",
-        },
-        y1: {
-            type: "linear",
-            display: true,
-            position: "right",
-            grid: {
-                drawOnChartArea: false,
+export default function SalesChart({ salesDate = [] }) {
+    if (!salesDate.length) {
+        return <p className="text-center">No sales data</p>;
+    }
+
+    const labels = salesDate.map((item) =>
+        new Date(item._id.date).toLocaleDateString("fr-FR", {
+            day: "2-digit",
+            month: "short",
+        })
+    );
+
+    const data = {
+        labels,
+        datasets: [
+            {
+                label: "Sales",
+                data: salesDate.map((item) => item.totalSales),
+                borderColor: "#198753",
+            },
+            {
+                label: "Orders",
+                data: salesDate.map((item) => item.numOrder),
+                borderColor: "rgb(220, 52, 69)",
+                yAxisID: "y1",
+            },
+        ],
+    };
+
+    const options = {
+        responsive: true,
+        scales: {
+            x: {
+                type: "category",
+                ticks: { autoSkip: true },
+            },
+            y: { position: "left" },
+            y1: {
+                position: "right",
+                grid: { drawOnChartArea: false },
             },
         },
-    },
-};
+    };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-export const data = {
-    labels,
-    datasets: [
-        {
-            label: "Sales",
-            data: [14, 45, 68, 49, 23, 44],
-            borderColor: "#198753",
-            backgroundColor: "rgba(42, 117, 83, 0.5)",
-            yAxisID: "y",
-        },
-        {
-            label: "orders",
-            data: [14, 35, 78, 39, 83, 42],
-            borderColor: "#d42b2b",
-            backgroundColor: "rgba(201,68,82, 0.5)",
-            yAxisID: "y1",
-        },
-    ],
-};
-
-export default function SalesChart() {
-    return <Line options={options} data={data} />;
+    return (
+        <div style={{ height: 400 }}>
+            <Line data={data} options={options} />
+        </div>
+    );
 }
