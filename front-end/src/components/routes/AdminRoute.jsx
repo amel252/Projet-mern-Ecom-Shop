@@ -4,6 +4,7 @@ import Dashboard from "../admin/Dashboard";
 import { Route } from "react-router-dom";
 import ListProducts from "../admin/ListProducts";
 import NewProduct from "../admin/NewProduct";
+import UpdateProduct from "../admin/UpdateProduct";
 
 const AdminRoute = () => {
     return (
@@ -29,6 +30,14 @@ const AdminRoute = () => {
                 element={
                     <ProtectedRoute admin={true}>
                         <NewProduct />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/admin/products/:id"
+                element={
+                    <ProtectedRoute admin={true}>
+                        <UpdateProduct />
                     </ProtectedRoute>
                 }
             />

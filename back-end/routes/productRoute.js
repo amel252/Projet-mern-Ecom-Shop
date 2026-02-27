@@ -41,3 +41,4 @@ router
 router.route("/can_review").get(isAuthentificatedUser, canUserReview);
 
 export default router;
+//  on doit matcher le chemin api entre productRoute et notre API redux (meme chemin )
