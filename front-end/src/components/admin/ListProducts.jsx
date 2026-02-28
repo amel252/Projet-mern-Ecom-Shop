@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useGetAdminProductsQuery } from "../../redux/api/productsApi";
+import {
+    useGetAdminProductsQuery,
+    useDeleteProductMutation,
+} from "../../redux/api/productsApi";
 import { toast } from "react-hot-toast";
 import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader";
@@ -10,12 +13,26 @@ import AdminLayout from "../layout/AdminLayout";
 const ListProducts = () => {
     const { data, isLoading, error } = useGetAdminProductsQuery();
     console.log(data);
+    const [deleteProduct, { isLoading: isDeleteLoading, error: deleteError }] =
+        useDeleteProductMutation();
 
     useEffect(() => {
         if (error) {
             toast.error(error?.data?.message);
         }
-    }, [error]);
+        if (deleteError) {
+            toast.error(deleteError?.data?.message);
+        }
+    }, [error, deleteError]);
+
+    const deleteProductHandler = async (id) => {
+        try {
+            await deleteProduct(id).unwrap();
+            toast.success("Product deleted");
+        } catch (err) {
+            toast.error(err?.data?.message || "Delete Failed");
+        }
+    };
     const setProducts = () => {
         const products = {
             columns: [
@@ -45,7 +62,11 @@ const ListProducts = () => {
                         >
                             <i className="fa fa-image"></i>
                         </Link>
-                        <Link className="btn btn-outline-danger btn-sm ms-2">
+                        <Link
+                            className="btn btn-outline-danger btn-sm ms-2"
+                            onClick={() => deleteProductHandler(p?._id)}
+                            disabled={isDeleteLoading}
+                        >
                             <i className="fa fa-trash"></i>
                         </Link>
                     </>

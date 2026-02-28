@@ -35,7 +35,7 @@ router
     .route("/products/:id")
     .put(isAuthentificatedUser, authorizeRole("admin"), updateProduct);
 router
-    .route("/products/:id")
+    .route("/admin/products/:id")
     .delete(isAuthentificatedUser, authorizeRole("admin"), deleteProduct);
 
 router

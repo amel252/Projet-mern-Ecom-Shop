@@ -97,6 +97,12 @@ export const deleteProduct = catchAsyncErrors(async (req, res, next) => {
     if (!product) {
         return next(new ErrorHandler("Product does not existe", 404));
     }
+    //  on doit se tenir compte de l'id de l'img
+    for (let i = 0; i < product?.images?.length; i++) {
+        if (product.images[i]?.public_id) {
+            delete_file(product.images[i].public_id);
+        }
+    }
     await product.deleteOne();
     res.status(200).json({
         message: "Product deleted",
@@ -257,16 +263,6 @@ export const deleteProductImage = catchAsyncErrors(async (req, res, next) => {
             (img) => img.public_id !== req.body.imgId
         );
     }
-    // const uploader = async (file) => {
-    //     const base64 = `data:${file.mimetype};base64,${file.buffer.toString(
-    //         "base64"
-    //     )}`;
-    //     return await upload_file(base64, "shop/products");
-    // };
-
-    // const urls = await Promise.all(req.files.map((file) => uploader(file)));
-
-    // product.images.push(...urls);
 
     await product?.save();
 
