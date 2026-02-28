@@ -72,6 +72,16 @@ export const productApi = createApi({
             //  on met "Product dans les tag pour que le rafrichissement se fait automatiquement"
             invalidateTags: ["AdminProducts", "Product"],
         }),
+        uploadProductImage: builder.mutation({
+            query({ id, body }) {
+                return {
+                    url: `/admin/products/${id}/upload_images`,
+                    method: "PUT",
+                    body,
+                };
+            },
+            invalidateTags: ["AdminProducts", "Product"],
+        }),
     }),
 });
 export const {
@@ -83,4 +93,5 @@ export const {
     useGetAdminProductsQuery,
     useCreateProductMutation,
     useUpdateProductMutation,
+    useUploadProductImageMutation,
 } = productApi;

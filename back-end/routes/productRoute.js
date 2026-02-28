@@ -10,8 +10,15 @@ import {
     deleteReview,
     canUserReview,
     getAdminProducts,
+    uploadProductImage,
 } from "../controllers/productController.js";
 import { isAuthentificatedUser, authorizeRole } from "../middleware/auth.js";
+//  memoire storage pour récuperer le fichiers (images)
+import multer from "multer";
+// import { upload_file } from "../utils/cloudinary.js";
+
+const storage = multer.memoryStorage();
+const upload = multer(storage);
 
 // j'ai instiancé expresss
 const router = express.Router();
@@ -30,7 +37,6 @@ router
     .route("/products/:id")
     .delete(isAuthentificatedUser, authorizeRole("admin"), deleteProduct);
 
-//
 router
     .route("/reviews")
     .put(isAuthentificatedUser, createProductReview)
@@ -40,5 +46,14 @@ router
     .delete(isAuthentificatedUser, authorizeRole("admin"), deleteReview);
 router.route("/can_review").get(isAuthentificatedUser, canUserReview);
 
+router
+    .route("/admin/products/:id/upload_images")
+    .put(
+        isAuthentificatedUser,
+        authorizeRole("admin"),
+        upload.array("images"),
+        uploadProductImage
+    );
 export default router;
+
 //  on doit matcher le chemin api entre productRoute et notre API redux (meme chemin )

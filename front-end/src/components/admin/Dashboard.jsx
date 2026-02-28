@@ -21,9 +21,9 @@ const Dashboard = () => {
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
     });
-    console.log("DASHBOARD DATA:", data);
-    console.log("SALES DATA:", data?.salesData);
-    console.log("SALES DATA LENGTH:", data?.salesData?.length);
+    // console.log("DASHBOARD DATA:", data);
+    // console.log("SALES DATA:", data?.salesData);
+    // console.log("SALES DATA LENGTH:", data?.salesData?.length);
 
     useEffect(() => {
         if (error) {
