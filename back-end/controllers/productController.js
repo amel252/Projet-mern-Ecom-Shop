@@ -3,7 +3,7 @@ import ErrorHandler from "../utils/errorHandler.js";
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import APIFilters from "../utils/apiFilter.js";
 import Order from "../models/orderModel.js";
-import { upload_file } from "../utils/cloudinary.js";
+import { upload_file, delete_file } from "../utils/cloudinary.js";
 
 // create new product => /api/v1/admin/products
 export const newProduct = catchAsyncErrors(async (req, res) => {
@@ -217,24 +217,7 @@ export const getAdminProducts = catchAsyncErrors(async (req, res, next) => {
         products,
     });
 });
-// upload product image => /api/v1/admin/products/:id/upload_images
-// export const uploadProductImage = catchAsyncErrors(async (req, res, next) => {
-//     const product = await Product.findById(req.params.id);
-//     if (!product) {
-//         return next(new ErrorHandler("Product not found ", 400));
-//     }
-//     const uploader = async (base64) =>
-//         await upload_file(base64, "shop/products");
-//     const urls = await Promise.all(req.files.map((file) => uploader(base64)));
-//     //  on va inserer img dans notre produit
-//     product.images.push(...urls);
-//     //  enregister la modif
-//     await product.save();
 
-//     res.status(200).json({
-//         product,
-//     });
-// });
 export const uploadProductImage = catchAsyncErrors(async (req, res, next) => {
     const product = await Product.findById(req.params.id);
 
@@ -257,6 +240,37 @@ export const uploadProductImage = catchAsyncErrors(async (req, res, next) => {
 
     res.status(200).json({
         success: true,
+        product,
+    });
+});
+// delete img produit => /api/v1/admin/products/;id/delete_images
+export const deleteProductImage = catchAsyncErrors(async (req, res, next) => {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+        return next(new ErrorHandler("Product not found", 400));
+    }
+
+    const isDeleted = await delete_file(req.body.imgId);
+    if (isDeleted) {
+        product.images = product?.images?.filter(
+            (img) => img.public_id !== req.body.imgId
+        );
+    }
+    // const uploader = async (file) => {
+    //     const base64 = `data:${file.mimetype};base64,${file.buffer.toString(
+    //         "base64"
+    //     )}`;
+    //     return await upload_file(base64, "shop/products");
+    // };
+
+    // const urls = await Promise.all(req.files.map((file) => uploader(file)));
+
+    // product.images.push(...urls);
+
+    await product?.save();
+
+    res.status(200).json({
         product,
     });
 });

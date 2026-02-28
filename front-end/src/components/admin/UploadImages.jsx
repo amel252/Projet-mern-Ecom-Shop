@@ -1,177 +1,8 @@
-// import React, { useEffect, useState, useRef } from "react";
-// import {
-//     useGetProductDetailsQuery,
-//     useUploadProductImageMutation,
-// } from "../../redux/api/productsApi";
-// import { toast } from "react-hot-toast";
-// import MetaData from "../layout/MetaData";
-// import { PRODUCT_CATEGORY } from "../../constants/constants";
-// import { useNavigate, useParams } from "react-router-dom";
-// import AdminLayout from "../layout/AdminLayout";
-
-// const UploadImages = () => {
-//     const navigate = useNavigate();
-//     const params = useParams();
-//     const fileInputRef = useRef(null);
-//     const [images, setImages] = useState([]);
-//     const [imagesPreview, setImagesPreview] = useState([]);
-//     const [uploadedImages, setUploadedImages] = useState([]);
-
-//     const [uploadProductImages, { isLoading, error, isSuccess }] =
-//         useUploadProductImageMutation();
-//     //  pour récuperer nos données dans url avec params
-//     const { data, refetch } = useGetProductDetailsQuery(params?.id);
-
-//     useEffect(() => {
-//         // on prend les anciennes valeur et les modifie
-//         if (data?.product) {
-//             setUploadedImages(data?.product?.images);
-//         }
-//         if (error) {
-//             toast.error(error?.data?.message);
-//         }
-//         if (isSuccess) {
-//             setImagesPreview([]);
-//             toast.success("Product images is Updated");
-//             navigate("/admin/products");
-//         }
-//     }, [data, isSuccess, error, navigate]);
-
-//     const onChange = (e) => {
-//         //  files contient le tableau des img
-//         const files = Array.from(e.target.files);
-//         setImages(files);
-
-//         const previews = files.map((file) => URL.createObjectURL(file));
-//     };
-//     const handleResetFileInput = () => {
-//         if (fileInputRef.current) {
-//             fileInputRef.current.value = "";
-//         }
-//     };
-//     const handleImagePreviewDelete = (imageUrl) => {
-//         const index = imagesPreview.findIndex((img) => img === imageUrl);
-//     };
-//     if (index !== -1) {
-//         const newPreviws = [...imagesPreview];
-//         const newFiles = [...images];
-
-//         newPreviws.splice(index, 1);
-//         newFiles.splice(index, 1);
-
-//         setImages(newFiles);
-//         setImagesPreview(newPreviws);
-//     }
-//     const submitHandler = async (e) => {
-//         e.preventDefault();
-//         const formData = new FormData();
-//         images.forEach((file) => formData.append("images", file));
-//         await uploadProductImages({ id: params.id, body: formData });
-//     };
-//     return (
-//         <AdminLayout>
-//             <MetaData title={"Upload Product Images"} />
-//             <div className="row wrapper">
-//                 <div className="col-10 col-lg-8 mt-5 mt-lg-0">
-//                     <form
-//                         onSubmit={submitHandler}
-//                         className="shadow rounded bg-body"
-//                         enctype="multipart/form-data"
-//                     >
-//                         <h2 className="mb-4">Upload Product Images</h2>
-
-//                         <div className="mb-3">
-//                             <label for="customFile" className="form-label">
-//                                 Choose Images
-//                             </label>
-
-//                             <div className="custom-file">
-//                                 <input
-//                                     type="file"
-//                                     name="images"
-//                                     className="form-control"
-//                                     id="customFile"
-//                                     multiple
-//                                     red={fileInputRef}
-//                                     onChange={onChange}
-//                                     onClick={handleResetFileInput}
-//                                 />
-//                             </div>
-//                             {imagesPreview?.length > 0 && (
-//                                 <div className="new-images my-4">
-//                                     <p className="text-warning">New Images:</p>
-//                                     <div className="row mt-4">
-//                                         {imagesPreview?.map((img, index) => (
-//                                             <div className="col-md-3 mt-2">
-//                                                 <div className="card">
-//                                                     <img
-//                                                         src={img}
-//                                                         alt="Card"
-//                                                         className="card-img-top p-2"
-//                                                         style={{
-//                                                             width: "100%",
-//                                                             height: "80%",
-//                                                         }}
-//                                                     />
-//                                                     <button
-//                                                         style="background-color: #dc3545; border-color: #dc3545"
-//                                                         type="button"
-//                                                         className="btn btn-block btn-danger cross-button mt-1 py-0"
-//                                                     >
-//                                                         <i className="fa fa-times"></i>
-//                                                     </button>
-//                                                 </div>
-//                                             </div>
-//                                         ))}
-//                                     </div>
-//                                 </div>
-//                             )}
-//                             <div className="uploaded-images my-4">
-//                                 <p className="text-success">
-//                                     Product Uploaded Images:
-//                                 </p>
-//                                 <div className="row mt-1">
-//                                     <div className="col-md-3 mt-2">
-//                                         <div className="card">
-//                                             <img
-//                                                 src=""
-//                                                 alt="Card"
-//                                                 className="card-img-top p-2"
-//                                                 style="width: 100%; height: 80px"
-//                                             />
-//                                             <button
-//                                                 style="background-color: #dc3545; border-color: #dc3545"
-//                                                 className="btn btn-block btn-danger cross-button mt-1 py-0"
-//                                                 disabled="true"
-//                                                 type="button"
-//                                             >
-//                                                 <i className="fa fa-trash"></i>
-//                                             </button>
-//                                         </div>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                         </div>
-
-//                         <button
-//                             id="register_button"
-//                             type="submit"
-//                             className="btn w-100 py-2"
-//                         >
-//                             Upload
-//                         </button>
-//                     </form>
-//                 </div>
-//             </div>
-//         </AdminLayout>
-//     );
-// };
-
-// export default UploadImages;
 import React, { useEffect, useState, useRef } from "react";
 import {
     useGetProductDetailsQuery,
     useUploadProductImageMutation,
+    useDeleteProductImageMutation,
 } from "../../redux/api/productsApi";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -187,24 +18,40 @@ const UploadImages = () => {
     const [images, setImages] = useState([]);
     const [imagesPreview, setImagesPreview] = useState([]);
     const [uploadedImages, setUploadedImages] = useState([]);
-
-    const [uploadProductImages, { isLoading, error, isSuccess }] =
+    //  mutation RTK pour upload img
+    const [uploadProductImage, { isLoading, error, isSuccess }] =
         useUploadProductImageMutation();
     const { data, refetch } = useGetProductDetailsQuery(params?.id);
+    //  RTK suppression
+    const [
+        deleteProductImage,
+        { isLoading: isDeleteLoading, error: deleteError },
+    ] = useDeleteProductImageMutation();
+
+    // useEffect(() => {
+    //     if (data?.product) {
+    //         setUploadedImages(data?.product?.images);
+    //     }
+    //     if (error) {
+    //         toast.error(data?.product?.message);
+    //     }
+    //     if (isSuccess) {
+    //         setImagesPreview([]);
+    //         toast.success("Images Uploaded");
+    //         navigate("/admin/products");
+    //     }
+    // }, [data, error, isSuccess, navigate, isDeleteLoading, deleteError]);
+    useEffect(() => {
+        if (data?.product?.images) {
+            setUploadedImages(data.product.images);
+        }
+    }, [data?.product?.images]);
 
     useEffect(() => {
-        if (data?.product) {
-            setUploadedImages(data?.product?.images);
+        if (deleteError) {
+            toast.error(deleteError?.data?.message || "Delete failed");
         }
-        if (error) {
-            toast.error(data?.product?.message);
-        }
-        if (isSuccess) {
-            setImagesPreview([]);
-            toast.success("Images Uploaded");
-            navigate("/admin/products");
-        }
-    }, [data, error, isSuccess, navigate]);
+    }, [deleteError]);
 
     const onChange = (e) => {
         const files = Array.from(e.target.files);
@@ -234,16 +81,20 @@ const UploadImages = () => {
             setImagesPreview(newPreviews);
         }
     };
-
+    //  soummission du formulaire
     const submitHandler = async (e) => {
         e.preventDefault();
 
         const formData = new FormData();
         images.forEach((file) => formData.append("images", file));
 
-        await uploadProductImages({ id: params.id, body: formData });
+        await uploadProductImage({ id: params.id, body: formData });
     };
 
+    //  deleteImg
+    const deleteImage = (imgId) => {
+        deleteProductImage({ id: params?.id, body: { imgId } });
+    };
     return (
         <AdminLayout>
             <MetaData title={"Upload Product Images"} />
@@ -346,8 +197,16 @@ const UploadImages = () => {
                                                                 "#dc3545",
                                                         }}
                                                         className="btn btn-block btn-danger cross-button mt-1 py-0"
-                                                        disabled={true}
+                                                        disabled={
+                                                            isLoading ||
+                                                            isDeleteLoading
+                                                        }
                                                         type="button"
+                                                        onClick={() =>
+                                                            deleteImage(
+                                                                img?.public_id
+                                                            )
+                                                        }
                                                     >
                                                         <i className="fa fa-trash"></i>
                                                     </button>
@@ -359,7 +218,7 @@ const UploadImages = () => {
                             )}
                         </div>
                         <button
-                            disabled={isLoading}
+                            disabled={isLoading || isDeleteLoading}
                             id="register_button"
                             type="submit"
                             className="btn w-100 py-2"

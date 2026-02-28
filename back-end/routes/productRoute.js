@@ -11,6 +11,7 @@ import {
     canUserReview,
     getAdminProducts,
     uploadProductImage,
+    deleteProductImage,
 } from "../controllers/productController.js";
 import { isAuthentificatedUser, authorizeRole } from "../middleware/auth.js";
 //  memoire storage pour récuperer le fichiers (images)
@@ -54,6 +55,10 @@ router
         upload.array("images"),
         uploadProductImage
     );
+router
+    .route("/admin/products/:id/delete_images")
+    .put(isAuthentificatedUser, authorizeRole("admin"), deleteProductImage);
+
 export default router;
 
 //  on doit matcher le chemin api entre productRoute et notre API redux (meme chemin )
