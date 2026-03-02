@@ -25,8 +25,16 @@ export const newOrder = catchAsyncErrors(async (req, res, next) => {
         shippingAmount,
         totalAmount,
         paymentMethod,
-        paymentInfo,
-        user: req.user._id,
+        // // paymentInfo, rajout
+        // paymentInfo:
+        //     paymentMethod === "Card"
+        //         ? { id: "test_payment_id", status: "paid" }
+        //         : { id: null, status: "pending" }, // COD
+        paymentInfo: {
+            id: session.payment_intent,
+            status: session.payment_status,
+        },
+        user: req.userId,
     });
     res.status(200).json({
         order,

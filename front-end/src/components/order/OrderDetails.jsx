@@ -104,7 +104,7 @@ function OrderDetails() {
                                 </tr>
                                 <tr>
                                     <th scope="row">Stripe ID</th>
-                                    <td>stripe-id</td>
+                                    <td>{paymentInfo?.id || "N/A"}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Amount Paid</th>

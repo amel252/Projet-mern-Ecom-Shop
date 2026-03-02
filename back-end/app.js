@@ -13,15 +13,20 @@ import errorMiddleware from "./middleware/error.js";
 import cookieParser from "cookie-parser";
 import paymentRoutes from "./routes/paymentRoute.js";
 import bodyParser from "body-parser";
+// rajout chatGpt
+import { stripeWebhookHandler } from "./controllers/paymentController.js";
 
 const app = express();
 
 connectedDatabase();
 
-app.use(
+//  rajout chatGpt
+app.post(
     "/api/v1/payment/webhook",
-    bodyParser.raw({ type: "application/json" })
+    bodyParser.raw({ type: "application/json" }),
+    stripeWebhookHandler
 );
+
 app.use(express.json());
 app.use(cookieParser());
 // ✅ CORS DOIT ÊTRE AVANT LES ROUTES

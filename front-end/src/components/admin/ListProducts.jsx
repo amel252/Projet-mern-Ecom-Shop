@@ -75,6 +75,7 @@ const ListProducts = () => {
         });
         return products;
     };
+
     if (isLoading) return <Loader />;
 
     return (

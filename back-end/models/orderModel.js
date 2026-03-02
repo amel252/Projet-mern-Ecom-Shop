@@ -34,7 +34,8 @@ const orderSchema = new mongoose.Schema(
                     required: true,
                 },
                 quantity: {
-                    type: String,
+                    type: Number,
+                    // type: String,
                     required: true,
                 },
                 image: {
@@ -42,7 +43,8 @@ const orderSchema = new mongoose.Schema(
                     required: true,
                 },
                 price: {
-                    type: String,
+                    type: Number,
+                    // type: String,
                     required: true,
                 },
                 product: {
@@ -64,6 +66,8 @@ const orderSchema = new mongoose.Schema(
             id: String,
             status: String,
         },
+        paidAt: Date,
+
         itemsPrice: {
             type: Number,
             required: true,
