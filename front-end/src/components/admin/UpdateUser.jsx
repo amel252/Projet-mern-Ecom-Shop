@@ -35,7 +35,7 @@ const UpdateUser = () => {
             toast.success("User Updated");
             navigate("/admin/users");
         }
-    }, [error, isSuccess]);
+    }, [error, isSuccess, navigate]);
 
     const submitHandler = (e) => {
         e.preventDefault();
