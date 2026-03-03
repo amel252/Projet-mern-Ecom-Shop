@@ -40,7 +40,7 @@ const ListUsers = () => {
                     <>
                         <Link
                             className="btn btn-outline-primary btn-sm"
-                            to={"/admin/users"}
+                            to={`/admin/users/${user?._id}`}
                         >
                             <i className="fa fa-pencil"></i>
                         </Link>
