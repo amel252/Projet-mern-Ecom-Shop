@@ -101,9 +101,6 @@ export const productApi = createApi({
             },
             invalidateTags: ["AdminProducts", "Product"],
         }),
-        getAdminOrders: builder.query({
-            query: () => "/admin/orders",
-        }),
     }),
 });
 export const {

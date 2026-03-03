@@ -1,6 +1,9 @@
 // export default ListOrders;
 import React, { useEffect } from "react";
-import { useGetAdminOrdersQuery } from "../../redux/api/productsApi";
+import {
+    useGetAdminOrdersQuery,
+    useDeleteOrderMutation,
+} from "../../redux/api/orderApi";
 import { toast } from "react-hot-toast";
 import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader";
@@ -10,16 +13,31 @@ import AdminLayout from "../layout/AdminLayout";
 
 const ListOrders = () => {
     const { data, isLoading, error } = useGetAdminOrdersQuery();
+    const [
+        deleteOrder,
+        { error: deleteError, isLoading: isDeleteLoading, isSuccess },
+    ] = useDeleteOrderMutation();
 
     useEffect(() => {
         if (error) {
-            toast.error(
-                error?.data?.message ||
-                    "Erreur lors du chargement des commandes"
-            );
+            toast.error(error?.data?.message);
         }
-    }, [error]);
+        if (deleteOrder) {
+            toast.error(deleteError?.data?.message);
+        }
+        if (isSuccess) {
+            toast.success("Order deleted");
+        }
+    }, [error, deleteError, isSuccess]);
 
+    const deleteOrderHandler = async (id) => {
+        try {
+            await deleteOrder(id).unwrap();
+            //  unwrap permet de recup l'erreur si existe
+        } catch (err) {
+            toast.error(err?.data?.message || "Delete failed");
+        }
+    };
     const setOrders = () => {
         const orders = {
             columns: [
@@ -49,7 +67,11 @@ const ListOrders = () => {
                         >
                             <i className="fa fa-pencil"></i>
                         </Link>
-                        <Link className="btn btn-outline-danger btn-sm ms-2">
+                        <Link
+                            className="btn btn-outline-danger btn-sm ms-2"
+                            onClick={() => deleteOrderHandler(order?._id)}
+                            disabled={isDeleteLoading}
+                        >
                             <i className="fa fa-trash"></i>
                         </Link>
                     </>
