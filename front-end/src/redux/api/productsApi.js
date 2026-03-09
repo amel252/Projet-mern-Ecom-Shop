@@ -9,7 +9,7 @@ export const productApi = createApi({
         credentials: "include",
     }),
     //  pour rafrechir la page apres chaque modif
-    tagTypes: ["Product", "AdminProducts"],
+    tagTypes: ["Product", "AdminProducts", "Reviews"],
 
     endpoints: (builder) => ({
         getProducts: builder.query({
@@ -103,6 +103,17 @@ export const productApi = createApi({
         }),
         getProductReviews: builder.query({
             query: (productId) => `/reviews?id=${productId}`,
+            invalidateTags: ["Reviews"],
+        }),
+        //  c'est l'admin qui va supp le comment
+        deleteReview: builder.mutation({
+            query({ productId, id }) {
+                return {
+                    url: `/admin/reviews?productId=${productId}&id=${id}`,
+                    method: "DELETE",
+                };
+            },
+            invalidateTags: ["Reviews"],
         }),
     }),
 });
@@ -120,4 +131,5 @@ export const {
     useDeleteProductMutation,
     useGetAdminOrdersQuery,
     useLazyGetProductReviewsQuery,
+    useDeleteReviewMutation,
 } = productApi;
