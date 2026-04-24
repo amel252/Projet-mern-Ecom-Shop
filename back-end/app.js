@@ -1,7 +1,10 @@
 import express from "express";
 import path from "path";
 import dotenv from "dotenv";
-dotenv.config({ path: "back-end/config/config.env" });
+// dotenv.config({ path: "back-end/config/config.env" });
+dotenv.config({
+    path: path.resolve("back-end/config/config.env"),
+});
 import cors from "cors"; // ✅ AJOUT
 import productRoutes from "./routes/productRoute.js";
 import authRoutes from "./routes/authRoute.js";
